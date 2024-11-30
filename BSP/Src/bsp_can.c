@@ -66,7 +66,7 @@ void BspCan2Init() {
  */
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
-	if(hcan->Instance == CAN1)//这个地方有疑问
+	if(hcan->Instance == CAN1)
 	{
 
 		HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &hcan1RxFrame.header, hcan1RxFrame.data);
