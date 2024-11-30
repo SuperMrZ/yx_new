@@ -50,6 +50,9 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
     BSP/Src/bsp_can.c
     BSP/Src/bsp_uart.c
+    Alogrithm/Src/PID.c
+    Device/Src/motorCmd.c
+
 
 
 
@@ -59,6 +62,10 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
     BSP/Inc
+    Alogrithm/Inc
+    Device/Inc
+    Device/Inc
+
 
 )
 

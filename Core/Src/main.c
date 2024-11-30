@@ -27,6 +27,7 @@
 /* USER CODE BEGIN Includes */
 #include "bsp_can.h"
 #include "bsp_uart.h"
+#include "motorCmd.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -38,6 +39,7 @@
 /* USER CODE BEGIN PD */
 SBUS_Buffer SBUS;
 uint8_t SBUS_RXBuffer[25];
+motorReceiveInfo M3508Friction[4];
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -102,7 +104,7 @@ int main(void)
   
   BspCan1Init();
 
-  int16_t target[4]={500,100,100,100};
+  int16_t target[4]={100,100,100,100};
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -110,9 +112,12 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    CAN_SendData(1,0x200,target);
 
     /* USER CODE BEGIN 3 */
+    cmd_M3508Friction_angle(target);
+    //cmd_M3508Friction_speed(target);
+    //CAN_SendData(1,0x200,target);
+    HAL_Delay(2);
   }
   /* USER CODE END 3 */
 }

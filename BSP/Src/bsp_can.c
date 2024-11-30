@@ -6,6 +6,9 @@ CAN_RxFrameTypeDef hcan2RxFrame;
 CAN_TxFrameTypeDef hcan1TxFrame;
 CAN_TxFrameTypeDef hcan2TxFrame;
 
+
+extern motorReceiveInfo M3508Friction[4];
+
 /* Private functions ---------------------------------------------------------*/
 /**
   * @brief  BspCan1Init此函数用于can1的初始化
@@ -61,6 +64,8 @@ void BspCan2Init() {
     HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO1_MSG_PENDING);
 }
 
+
+
 /**
  *	@brief	CAN 接收中断回调函数
  */
@@ -70,7 +75,27 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 	{
 
 		HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &hcan1RxFrame.header, hcan1RxFrame.data);
+        HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
         //在下面进行解码begin
+        switch (hcan1RxFrame.header.StdId)
+        {
+        case 0x201:
+        case 0x202:
+        case 0x203:
+        {
+          	int16_t i=0;
+			i=hcan1RxFrame.header.StdId-0x201;
+			M3508Friction[i].ecd=(hcan1RxFrame.data[0]<<8)|hcan1RxFrame.data[1];//转子机械角度
+		    M3508Friction[i].speed_rpm=(hcan1RxFrame.data[2]<<8)|hcan1RxFrame.data[3];//转子转速
+	    	M3508Friction[i].given_current=(hcan1RxFrame.data[4]<<8)|hcan1RxFrame.data[5];//实际转矩电流
+		    M3508Friction[i].temperate=hcan1RxFrame.data[6];//电机温度	
+        }
+            /* code */
+            break;
+        
+        default:
+            break;
+        }
 
 
         //解码end
@@ -107,6 +132,9 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan)
         //解码end
 	}
 }
+
+
+
 
 uint8_t CAN_SendData(int8_t can, uint32_t stdId, int16_t *dat)
 {
@@ -158,6 +186,7 @@ uint8_t CAN_SendData(int8_t can, uint32_t stdId, int16_t *dat)
 	
 	return HAL_OK;
 }
+
 
 
 
