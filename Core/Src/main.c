@@ -28,6 +28,7 @@
 #include "bsp_can.h"
 #include "bsp_uart.h"
 #include "motorCmd.h"
+#include "damiao.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -39,7 +40,10 @@
 /* USER CODE BEGIN PD */
 SBUS_Buffer SBUS;
 uint8_t SBUS_RXBuffer[25];
+
 motorReceiveInfo M3508Friction[4];
+damiao_recieve damiao_recieve_pitch;
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
