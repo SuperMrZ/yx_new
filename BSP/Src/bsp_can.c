@@ -8,7 +8,7 @@ CAN_TxFrameTypeDef hcan2TxFrame;
 
 
 extern motorReceiveInfo M3508Friction[4];
-
+extern damiao_recieve damiao_recieve_pitch;
 /* Private functions ---------------------------------------------------------*/
 /**
   * @brief  BspCan1Init此函数用于can1的初始化
@@ -79,6 +79,20 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
         //在下面进行解码begin
         switch (hcan1RxFrame.header.StdId)
         {
+        case 0x114:
+        {
+           	damiao_recieve_pitch.p=(hcan1RxFrame.data[1] << 8) |hcan1RxFrame.data[2];
+		    damiao_recieve_pitch.v=(hcan1RxFrame.data[3] << 4) |(hcan1RxFrame.data[4] >> 4);
+		    damiao_recieve_pitch.t=((hcan1RxFrame.data[4]&0xF) << 8) |hcan1RxFrame.data[5];
+
+
+            damiao_recieve_pitch.position = uint_to_float(damiao_recieve_pitch.p, -12.5, 12.5, 16); // (-12.5, 12.5)
+            damiao_recieve_pitch.velocity = uint_to_float(damiao_recieve_pitch.v, -45, 45, 12); // (-45.0, 45.0)
+            damiao_recieve_pitch.torque = uint_to_float(damiao_recieve_pitch.t, -18, 18, 12);   // (-18.0, 18.0) 
+
+        }
+        break;
+
         case 0x201:
         case 0x202:
         case 0x203:

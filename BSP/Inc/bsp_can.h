@@ -2,6 +2,7 @@
 #define __BSP_CAN_H__
 #include "main.h"
 #include "can.h"
+#include "damiao.h"
 
 
 typedef struct {
