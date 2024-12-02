@@ -52,6 +52,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     BSP/Src/bsp_uart.c
     Alogrithm/Src/PID.c
     Device/Src/motorCmd.c
+    Device/Src/damiao.c
+
 
 
 
@@ -65,6 +67,8 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     Alogrithm/Inc
     Device/Inc
     Device/Inc
+
+    
 
 
 )

@@ -8,7 +8,7 @@ PID pid_M3508Friction[4] = {
 };
 
 PID pid_M3508Friction_angle[4] = {
-    {0.3, 0.01, 0.3, 0x3000, 0x3000, 0, 0,0,0,0,0},
+    {0.5, 0, 0, 0x3000, 0x3000, 0, 0,0,0,0,0},
     {10, 0.01, 0, 0x3000, 0x3000, 0, 0,0,0,0,0},
     {10, 0.01, 0, 0x3000, 0x3000, 0, 0,0,0,0,0},
     {10, 0.01, 0, 0x3000, 0x3000, 0, 0,0,0,0,0}
@@ -24,7 +24,7 @@ int32_t pid_output(PID *pid, int16_t feedback, int16_t target)
     int16_t b = pid->error_last;
 
     // 计算P部分
-    int16_t pout = pid->kp * pid->error_now;
+    int32_t pout = pid->kp * pid->error_now;
 	pid->pout = pout;
 
     // 计算并限制I部分
@@ -39,16 +39,18 @@ int32_t pid_output(PID *pid, int16_t feedback, int16_t target)
 
 
     // 计算D部分
-    int16_t dout = pid->kd * (pid->error_now - pid->error_last);
+    int32_t dout = pid->kd * (pid->error_now - pid->error_last);
 	pid->dout = dout;
 
     // 计算输出并限制
- pid->output = pout - dout + pid->iout;
+ pid->output = pout + dout + pid->iout;
    if (pid->output > pid->maxO) {
        pid->output = pid->maxO;
    }
    else if(pid->output < -pid->maxO)
-	pid->output = pid->maxO;
+	{
+        pid->output = pid->maxO;
+    }
 
     return pid->output;
 }
