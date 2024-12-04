@@ -23,6 +23,11 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size) {
 /// @return 
 void remoteDecode()
 {
+
+    SBUS.SE_last = SBUS.SE;
+    SBUS.SF_last = SBUS.SF;
+    SBUS.SG_last = SBUS.SG;
+    SBUS.SH_last = SBUS.SH;
     SBUS.Start=SBUS_RXBuffer[0];
     SBUS.Ch1  = ((int16_t)SBUS_RXBuffer[1] >> 0  | ((int16_t)SBUS_RXBuffer[2] << 8)) & 0x07FF;
     SBUS.Ch2  = ((int16_t)SBUS_RXBuffer[2] >> 3  | ((int16_t)SBUS_RXBuffer[3] << 5)) & 0x07FF;
@@ -42,11 +47,17 @@ void remoteDecode()
     SBUS.Ch16 = ((int16_t)SBUS_RXBuffer[21] >> 5 | ((int16_t)SBUS_RXBuffer[22] << 3)) & 0x07FF;
     SBUS.Flag = SBUS_RXBuffer[23];
     SBUS.End  = SBUS_RXBuffer[24];
+    SBUS.SF = SBUS.Ch6;
+    SBUS.SH = SBUS.Ch7;
+    SBUS.SE = SBUS.Ch8;
+    SBUS.SG = SBUS.Ch9;
 
     HAL_UARTEx_ReceiveToIdle_DMA(&huart3,SBUS_RXBuffer,25);						
 	__HAL_DMA_DISABLE_IT(huart3.hdmarx ,DMA_IT_HT );
 
 }
+
+
 
 
 

@@ -26,6 +26,16 @@ typedef struct{//25ֽSBUS洢ṹ
 	uint16_t Ch16;
 	uint8_t Flag;
 	uint8_t End;
+	
+	uint16_t SF;
+	uint16_t SF_last;
+	uint16_t SH;
+	uint16_t SH_last;
+	uint16_t SE;
+	uint16_t SE_last;
+	uint16_t SG;
+	uint16_t SG_last;
+
 }SBUS_Buffer;
 
 void remoteDecode();

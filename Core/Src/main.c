@@ -127,7 +127,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     target[0]= 1000*sin_signal;
-    enable_damiao_motor(0x01);
+    disable_damiao_motor(0x01);
     HAL_Delay(2000);
     //cmd_M3508Friction_angle(target);
 
