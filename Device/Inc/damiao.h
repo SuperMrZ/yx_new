@@ -4,9 +4,11 @@
 
 float uint_to_float(uint16_t x_int, float x_min, float x_max, int bits);
 int float_to_uint(float x, float x_min, float x_max, int bits);
-void ctrl_damiao_motor(uint16_t id, float _pos, float _vel, float _KP, float _KD, float _torq);
+
 void enable_damiao_motor(uint16_t id);
 void disable_damiao_motor(uint16_t id);
+void ctrl_damiao_motor(uint16_t id, float _pos, float _vel, float _KP, float _KD, float _torq);
+void ctrl_torq_damiao_motor( uint16_t id, float _torq);
 
  typedef struct 
 {

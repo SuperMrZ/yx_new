@@ -127,9 +127,12 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     target[0]= 1000*sin_signal;
+    enable_damiao_motor(0x01);
+    HAL_Delay(2000);
     //cmd_M3508Friction_angle(target);
+
    // cmd_M3508Friction_speed(target);
-    CAN_SendData(1,0x200,target);
+   // CAN_SendData(1,0x200,target);
     HAL_Delay(2);
   }
   /* USER CODE END 3 */
