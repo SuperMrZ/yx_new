@@ -20,6 +20,7 @@
 #include "main.h"
 #include "can.h"
 #include "dma.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -43,7 +44,11 @@ uint8_t SBUS_RXBuffer[25];
 
 motorReceiveInfo M3508Friction[4];
 damiao_recieve damiao_recieve_pitch;
+extern float sin_signal;
 
+
+
+  int16_t target[4]={1000,100,100,100};
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -101,14 +106,17 @@ int main(void)
   MX_CAN1_Init();
   MX_CAN2_Init();
   MX_USART3_UART_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-   __HAL_DMA_DISABLE_IT(huart3.hdmarx ,DMA_IT_HT );  //防止接收到一半就停止，跟上一句一定要配套�??
+   __HAL_DMA_DISABLE_IT(huart3.hdmarx ,DMA_IT_HT );  //防止接收到一半就停止，跟上一句一定要配套�???
    __HAL_UART_ENABLE_IT(&huart3, UART_IT_IDLE); //使能IDLE中断
   HAL_UARTEx_ReceiveToIdle_DMA(&huart3,SBUS_RXBuffer,25);
+
+  	HAL_TIM_Base_Start_IT(&htim3);
   
   BspCan1Init();
 
-  int16_t target[4]={100,100,100,100};
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -118,9 +126,10 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    cmd_M3508Friction_angle(target);
-    //cmd_M3508Friction_speed(target);
-    //CAN_SendData(1,0x200,target);
+    target[0]= 1000*sin_signal;
+    //cmd_M3508Friction_angle(target);
+   // cmd_M3508Friction_speed(target);
+    CAN_SendData(1,0x200,target);
     HAL_Delay(2);
   }
   /* USER CODE END 3 */
