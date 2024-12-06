@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "cmsis_os.h"
 #include "can.h"
 #include "dma.h"
 #include "tim.h"
@@ -42,13 +43,15 @@
 SBUS_Buffer SBUS;
 uint8_t SBUS_RXBuffer[25];
 
-motorReceiveInfo M3508Friction[4];
+motorReceiveInfo M3508Friction[3];
+motorReceiveInfo M3508Load;
+motorReceiveInfo M2006Pushrop;
 damiao_recieve damiao_recieve_pitch;
 extern float sin_signal;
 
 
 
-  int16_t target[4]={1000,100,100,100};
+  int16_t target[4]={0,100,100,100};
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -64,6 +67,7 @@ extern float sin_signal;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -108,16 +112,39 @@ int main(void)
   MX_USART3_UART_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-   __HAL_DMA_DISABLE_IT(huart3.hdmarx ,DMA_IT_HT );  //防止接收到一半就停止，跟上一句一定要配套�???
+   __HAL_DMA_DISABLE_IT(huart3.hdmarx ,DMA_IT_HT );  //防止接收到一半就停止，跟上一句一定要配套�????
    __HAL_UART_ENABLE_IT(&huart3, UART_IT_IDLE); //使能IDLE中断
   HAL_UARTEx_ReceiveToIdle_DMA(&huart3,SBUS_RXBuffer,25);
 
-  	HAL_TIM_Base_Start_IT(&htim3);
+  HAL_TIM_Base_Start_IT(&htim3);
   
   BspCan1Init();
 
+  HAL_Delay(1000);
+  //推杆回退到3位置
+  
+  // while(M2006Pushrop.given_current >1000)//大于某个说明到底了
+  // {
+    
+
+  // }
+  /******************/
+  *pushrot_M2006_positionTarget = M2006Pushrop.ecd;
+  
+
 
   /* USER CODE END 2 */
+
+  /* Init scheduler */
+  osKernelInitialize();
+
+  /* Call init function for freertos objects (in cmsis_os2.c) */
+  MX_FREERTOS_Init();
+
+  /* Start scheduler */
+  osKernelStart();
+
+  /* We should never get here as control is now taken by the scheduler */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -128,11 +155,11 @@ int main(void)
     /* USER CODE BEGIN 3 */
     target[0]= 1000*sin_signal;
     disable_damiao_motor(0x01);
-    HAL_Delay(2000);
+   
     //cmd_M3508Friction_angle(target);
 
    // cmd_M3508Friction_speed(target);
-   // CAN_SendData(1,0x200,target);
+    CAN_SendData(1,0x200,target);
     HAL_Delay(2);
   }
   /* USER CODE END 3 */
@@ -186,6 +213,27 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
+
+/**
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM2 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
+
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM2) {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+
+  /* USER CODE END Callback 1 */
+}
 
 /**
   * @brief  This function is executed in case of error occurrence.

@@ -93,7 +93,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
     __HAL_RCC_TIM3_CLK_ENABLE();
 
     /* TIM3 interrupt Init */
-    HAL_NVIC_SetPriority(TIM3_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(TIM3_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(TIM3_IRQn);
   /* USER CODE BEGIN TIM3_MspInit 1 */
 
@@ -121,25 +121,25 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 }
 
 /* USER CODE BEGIN 1 */
-	void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-  {
+	// void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+  // {
 
-    while(time * 1000 > t[i] && i < (MAX_INDEX - 1))
-	    {
-		    i++;
-        time=0;
-	    }
-	  if(i == MAX_INDEX)
-	  {
-		  sin_signal = 0;
-		  time = 0;
-		  sin_signal_switch = 0;
-	  }
-	  sin_signal = sin(2 * pi * f[i] * time);//正弦信号
+  //   while(time * 1000 > t[i] && i < (MAX_INDEX - 1))
+	//     {
+	// 	    i++;
+  //       time=0;
+	//     }
+	//   if(i == MAX_INDEX)
+	//   {
+	// 	  sin_signal = 0;
+	// 	  time = 0;
+	// 	  sin_signal_switch = 0;
+	//   }
+	//   sin_signal = sin(2 * pi * f[i] * time);//正弦信号
 	
-	  time += 0.002;
+	//   time += 0.002;
 
-  }
+  // }
 
 
 

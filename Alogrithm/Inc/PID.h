@@ -26,5 +26,9 @@ int32_t output;
 
 extern PID pid_M3508Friction[4];
 extern PID pid_M3508Friction_angle[4];
+extern PID pid_M3508Load_speed;
+extern PID pid_M3508Laod_angle;
+extern PID pid_M2006Pushrop_speed;
+extern PID pid_M2006Pushrop_angle;
 
 #endif

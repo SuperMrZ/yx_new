@@ -38,6 +38,18 @@ typedef struct{//25ֽSBUS洢ṹ
 
 }SBUS_Buffer;
 
+
+typedef struct {
+    int8_t bullet;
+    int8_t pushrot_position;
+} gambleState;
+
+extern gambleState gamble_state;
+extern int32_t* pushrot_M2006_positionTarget;
+extern int16_t M3508Friction_speedTarget[3];
+
+ 
+
 void remoteDecode();
 
 #endif

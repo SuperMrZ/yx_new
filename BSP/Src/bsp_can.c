@@ -8,6 +8,8 @@ CAN_TxFrameTypeDef hcan2TxFrame;
 
 
 extern motorReceiveInfo M3508Friction[4];
+extern motorReceiveInfo M2006Pushrop;
+extern motorReceiveInfo M3508Load;
 extern damiao_recieve damiao_recieve_pitch;
 /* Private functions ---------------------------------------------------------*/
 /**
@@ -103,6 +105,22 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 		    M3508Friction[i].speed_rpm=(hcan1RxFrame.data[2]<<8)|hcan1RxFrame.data[3];//转子转速
 	    	M3508Friction[i].given_current=(hcan1RxFrame.data[4]<<8)|hcan1RxFrame.data[5];//实际转矩电流
 		    M3508Friction[i].temperate=hcan1RxFrame.data[6];//电机温度	
+        }
+        case 0x204:
+        {
+            M3508Load.ecd=(hcan1RxFrame.data[0]<<8)|hcan1RxFrame.data[1];//转子机械角度
+		    M3508Load.speed_rpm=(hcan1RxFrame.data[2]<<8)|hcan1RxFrame.data[3];//转子转速
+	    	M3508Load.given_current=(hcan1RxFrame.data[4]<<8)|hcan1RxFrame.data[5];//实际转矩电流
+		    M3508Load.temperate=hcan1RxFrame.data[6];//电机温度 
+        }
+        
+        case 0x205:
+        {
+            M2006Pushrop.ecd=(hcan1RxFrame.data[0]<<8)|hcan1RxFrame.data[1];//转子机械角度
+		    M2006Pushrop.speed_rpm=(hcan1RxFrame.data[2]<<8)|hcan1RxFrame.data[3];//转子转速
+	    	M2006Pushrop.given_current=(hcan1RxFrame.data[4]<<8)|hcan1RxFrame.data[5];//实际转矩电流
+		    M2006Pushrop.temperate=hcan1RxFrame.data[6];//电机温度	
+
         }
             /* code */
             break;

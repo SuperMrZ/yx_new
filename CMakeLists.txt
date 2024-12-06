@@ -56,6 +56,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Alogrithm/Src/PID.c
     Device/Src/motorCmd.c
     Device/Src/damiao.c
+    Tasks/Src/tasks.c
 
 
 
@@ -70,6 +71,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     Alogrithm/Inc
     Device/Inc
     Device/Inc
+    Tasks/Inc
 
     
 

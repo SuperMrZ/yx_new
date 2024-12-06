@@ -1,11 +1,12 @@
 #include "bsp_uart.h"
 
-
+gambleState gamble_state;
 
 extern SBUS_Buffer SBUS;
 extern uint8_t SBUS_RXBuffer[25];//声明遥控器接收缓存数组
 
-
+int32_t* pushrot_M2006_positionTarget;
+int16_t M3508Friction_speedTarget[3];
 
 void remoteDecode();
 
@@ -52,8 +53,36 @@ void remoteDecode()
     SBUS.SE = SBUS.Ch8;
     SBUS.SG = SBUS.Ch9;
 
+
+    if(SBUS.SH == 1695 && SBUS.SH_last == 353 && gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)
+    {
+        //2006旋转圈数
+        *pushrot_M2006_positionTarget += 8192*10;//目标转10转
+
+    }
+    if(SBUS.SH == 1695 && SBUS.SH_last == 353 && gamble_state.bullet ==0 && gamble_state.pushrot_position ==2)
+    {
+        
+    }
+
+    if (SBUS.SE == 1024)
+    {
+        M3508Friction_speedTarget[0]=2000;
+        M3508Friction_speedTarget[1]=2000;
+        M3508Friction_speedTarget[2]=2000;
+    }
+    
+    if (SBUS.SE == 353)
+    {
+        M3508Friction_speedTarget[0]=0;
+        M3508Friction_speedTarget[1]=0;
+        M3508Friction_speedTarget[2]=0;
+    }
+
+
     HAL_UARTEx_ReceiveToIdle_DMA(&huart3,SBUS_RXBuffer,25);						
 	__HAL_DMA_DISABLE_IT(huart3.hdmarx ,DMA_IT_HT );
+
 
 }
 
