@@ -5,8 +5,10 @@ gambleState gamble_state;
 extern SBUS_Buffer SBUS;
 extern uint8_t SBUS_RXBuffer[25];//声明遥控器接收缓存数组
 
-int32_t* pushrot_M2006_positionTarget;
+int32_t pushrot_M2006_positionTarget;
 int16_t M3508Friction_speedTarget[3];
+int32_t Load_M3508_positionTarget;
+int16_t Load_M3508_speedTarget;
 
 void remoteDecode();
 
@@ -54,30 +56,71 @@ void remoteDecode()
     SBUS.SG = SBUS.Ch9;
 
 
+    // if(SBUS.SG ==1695 && SBUS.SG_last ==1024 && gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)
+    // {
+    //     //2006旋转圈数
+    //     pushrot_M2006_positionTarget += 8192*10;//目标转10转
+
+    // }
+
+    //   if(SBUS.SG ==1024 && SBUS.SG_last ==353 && gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)
+    // {
+    //     //2006旋转圈数
+    //     pushrot_M2006_positionTarget += 8192*10;//目标转10转
+
+    // } 
+    //      if(SBUS.SG == 1024 && SBUS.SG_last == 1695 & gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)
+    // {
+    //     pushrot_M2006_positionTarget -= 8192*10;
+    // }
+    //      if(SBUS.SG == 353 && SBUS.SG_last == 1024 & gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)
+    // {
+
+    //     pushrot_M2006_positionTarget -= 8192*10;
+    // }
+
+    // if(SBUS.SH == 1695 && SBUS.SH_last == 353 && gamble_state.bullet ==0 && gamble_state.pushrot_position ==2)
     if(SBUS.SH == 1695 && SBUS.SH_last == 353 && gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)
     {
-        //2006旋转圈数
-        *pushrot_M2006_positionTarget += 8192*10;//目标转10转
-
-    }
-    if(SBUS.SH == 1695 && SBUS.SH_last == 353 && gamble_state.bullet ==0 && gamble_state.pushrot_position ==2)
-    {
-        
+        Load_M3508_positionTarget += 8192*10;
     }
 
-    if (SBUS.SE == 1024)
+    if(SBUS.SG == 1024)
     {
-        M3508Friction_speedTarget[0]=2000;
-        M3508Friction_speedTarget[1]=2000;
-        M3508Friction_speedTarget[2]=2000;
+        Load_M3508_speedTarget =0;
     }
-    
+        if(SBUS.SG == 353)
+    {
+        Load_M3508_speedTarget =-500;
+    }
+        if(SBUS.SG == 1695)
+    {
+        Load_M3508_speedTarget =500;
+    }
+
+
     if (SBUS.SE == 353)
     {
         M3508Friction_speedTarget[0]=0;
         M3508Friction_speedTarget[1]=0;
         M3508Friction_speedTarget[2]=0;
     }
+
+    if (SBUS.SE == 1024)
+    {
+        M3508Friction_speedTarget[0]=8000;
+        M3508Friction_speedTarget[1]=-8000;
+        M3508Friction_speedTarget[2]=8000;
+    }
+
+    //     if (SBUS.SE == 1695)
+    // {
+    //     M3508Friction_speedTarget[0]=7000;
+    //     M3508Friction_speedTarget[1]=-7000;
+    //     M3508Friction_speedTarget[2]=7000;
+    // }
+    
+    
 
 
     HAL_UARTEx_ReceiveToIdle_DMA(&huart3,SBUS_RXBuffer,25);						

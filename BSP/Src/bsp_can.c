@@ -106,6 +106,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 	    	M3508Friction[i].given_current=(hcan1RxFrame.data[4]<<8)|hcan1RxFrame.data[5];//实际转矩电流
 		    M3508Friction[i].temperate=hcan1RxFrame.data[6];//电机温度	
         }
+            break;
         case 0x204:
         {
             M3508Load.ecd=(hcan1RxFrame.data[0]<<8)|hcan1RxFrame.data[1];//转子机械角度
@@ -113,6 +114,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 	    	M3508Load.given_current=(hcan1RxFrame.data[4]<<8)|hcan1RxFrame.data[5];//实际转矩电流
 		    M3508Load.temperate=hcan1RxFrame.data[6];//电机温度 
         }
+            break;
         
         case 0x205:
         {

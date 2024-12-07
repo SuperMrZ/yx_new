@@ -1,15 +1,24 @@
 #include "motorCmd.h"
 
-int16_t M3508Friction_currnt[3];
-int16_t* M3508Load_currnt;
+int16_t M3508Friction_currnt[4];
+int16_t M3508Load_currnt;
 
 
 void cmd_M3508Friction_speed(int16_t target[3])
 {
-    int16_t motor_currnt[3];
+    int32_t motor_currnt[3];
     for (uint16_t i = 0; i < 3; i++) 
     {	
         motor_currnt[i] = pid_output(&pid_M3508Friction[i],M3508Friction[i].speed_rpm,target[i]); 
+        if (motor_currnt[i]>10000)
+        {
+            motor_currnt[i] =10000;
+        }
+        if(motor_currnt[i]< -10000)
+        {
+            motor_currnt[i] =-10000;
+        }
+        
         M3508Friction_currnt[i] = motor_currnt[i];
     }
     //CAN_SendData(1,0x200,motor_currnt);
@@ -45,7 +54,8 @@ void cmd_M3508Laod_speed(int16_t target)
     int16_t motor_currnt;
    	
         motor_currnt = pid_output(&pid_M3508Load_speed,M3508Load.speed_rpm,target); 
-        *M3508Load_currnt = motor_currnt;
+        M3508Friction_currnt[3] = motor_currnt;
+        // M3508Friction[3] = motor_currnt;
   
     //CAN_SendData(1,0x200,motor_currnt);
 
@@ -115,7 +125,7 @@ void Cmd_gamble3508_currnt(void)
     currnt_target[0] = M3508Friction_currnt[0];
     currnt_target[1] = M3508Friction_currnt[1];
     currnt_target[2] = M3508Friction_currnt[2];
-    currnt_target[4] = *M3508Load_currnt;
+    currnt_target[3] = M3508Friction_currnt[3];
     CAN_SendData(1,0x200,currnt_target);
 
 } 

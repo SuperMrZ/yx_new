@@ -14,9 +14,9 @@ int16_t maxI;  //maxI积分限幅
 int16_t maxO;  //maxO输出限幅
 int16_t error_now;
 int16_t error_last;
-float pout ;
+int32_t pout ;
 int16_t iout;
-float dout;
+int32_t dout;
 int32_t output;
 
 } PID;

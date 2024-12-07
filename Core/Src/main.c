@@ -48,6 +48,7 @@ motorReceiveInfo M3508Load;
 motorReceiveInfo M2006Pushrop;
 damiao_recieve damiao_recieve_pitch;
 extern float sin_signal;
+extern gambleState gamble_state;
 
 
 
@@ -121,15 +122,18 @@ int main(void)
   BspCan1Init();
 
   HAL_Delay(1000);
-  //推杆回退到3位置
   
+  //推杆回退到3位置
   // while(M2006Pushrop.given_current >1000)//大于某个说明到底了
   // {
     
 
   // }
   /******************/
-  *pushrot_M2006_positionTarget = M2006Pushrop.ecd;
+  pushrot_M2006_positionTarget = M2006Pushrop.ecd;
+  Load_M3508_positionTarget = M3508Load.ecd;
+  gamble_state.bullet = 1;
+  gamble_state.pushrot_position = 2;
   
 
 

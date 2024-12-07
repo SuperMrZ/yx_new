@@ -1,10 +1,10 @@
 #include "PID.h"
 
 PID pid_M3508Friction[4] = {
-    {5, 0.01, 0, 0x3000, 0x3000, 0, 0,0,0,0,0},
-    {10, 0.01, 0, 0x3000, 0x3000, 0, 0,0,0,0,0},
-    {10, 0.01, 0, 0x3000, 0x3000, 0, 0,0,0,0,0},
-    {10, 0.01, 0, 0x3000, 0x3000, 0, 0,0,0,0,0}
+    {1, 0.01, 0.5, 0x1000, 0x3000, 0, 0,0,0,0,0},
+    {1, 0.01, 0.5, 0x1000, 0x3000, 0, 0,0,0,0,0},
+    {1, 0.01, 0.5, 0x1000, 0x3000, 0, 0,0,0,0,0},
+    {5, 0.01, 0, 0x3000, 0x3000, 0, 0,0,0,0,0}
 };
 
 PID pid_M3508Friction_angle[4] = {
@@ -18,7 +18,7 @@ PID pid_M3508Load_speed=
 {5,0.1,0,0x1000,0x5000,0,0,0,0,0,0};
 
 PID pid_M3508Laod_angle=
-{5,0.01,0,0x1000,0x5000,0,0,0,0,0,0};
+{1,0,0.2,0x1000,0x5000,0,0,0,0,0,0};
 
 PID pid_M2006Pushrop_speed=
 {5,0.1,0,0x1000,0x5000,0,0,0,0,0,0};
@@ -32,16 +32,14 @@ int32_t pid_output(PID *pid, int16_t feedback, int16_t target)
     pid->error_last = pid->error_now;
     pid->error_now = target - feedback;
 
-    int16_t a = pid->error_now;
-    int16_t b = pid->error_last;
+
 
     // 计算P部分
     int32_t pout = pid->kp * pid->error_now;
 	pid->pout = pout;
 
     // 计算并限制I部分
-    pid->iout += (pid->ki * pid->error_now);
-    int16_t c = pid->iout;        
+    pid->iout += (pid->ki * pid->error_now);       
     if (pid->iout > pid->maxI) {
         pid->iout = pid->maxI;
     }
