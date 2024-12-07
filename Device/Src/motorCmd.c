@@ -2,6 +2,7 @@
 
 int16_t M3508Friction_currnt[4];
 int16_t M3508Load_currnt;
+int16_t M2006Pushrop_currnt;
 
 
 void cmd_M3508Friction_speed(int16_t target[3])
@@ -87,14 +88,13 @@ void cmd_M3508Load_angle(int16_t target)
 
 void cmd_M2006pushrop_speed(int16_t target)
 {
-    int16_t motor_currnt[4];
+    int16_t motor_currnt;
     	
-        motor_currnt[0] = pid_output(&pid_M2006Pushrop_speed,M2006Pushrop.speed_rpm,target);
-        motor_currnt[1] = 0;
-        motor_currnt[2] = 0;
-        motor_currnt[3] = 0;
+        motor_currnt = pid_output(&pid_M2006Pushrop_speed,M2006Pushrop.speed_rpm,target);
+
+        M2006Pushrop_currnt = motor_currnt;
     
-    CAN_SendData(1,0x1FF,motor_currnt);
+    
 
 }
 
@@ -129,6 +129,18 @@ void Cmd_gamble3508_currnt(void)
     CAN_SendData(1,0x200,currnt_target);
 
 } 
+
+void Cmd_gamble2006_currnt(void)
+{
+    int16_t currnt_target[4];
+    currnt_target[0] = M2006Pushrop_currnt;
+    currnt_target[1] = 0;
+    currnt_target[2] = 0;
+    currnt_target[3] = 0;    
+
+    CAN_SendData(1,0x1FF,currnt_target);
+
+}
 
 
 

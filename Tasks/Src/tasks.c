@@ -23,14 +23,26 @@ void StartTask02(void *argument)
 
     
 
-    osDelay(1);
-    Cmd_gamble3508_currnt();
+    
+    
   
 
     osDelay(1);   
   }
   /* USER CODE END StartDefaultTask */
 }
+
+void Sendmessage(void *argument)
+{
+  while(1)
+  {
+    Cmd_gamble2006_currnt();
+    Cmd_gamble3508_currnt();
+
+    osDelay(1);
+  }
+}
+
 
 
 

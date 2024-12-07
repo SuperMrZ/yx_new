@@ -24,6 +24,7 @@ void cmd_M2006pushrop_angle(int16_t target);
 
 
 void Cmd_gamble3508_currnt(void);
+void Cmd_gamble2006_currnt(void);
 
 
 
