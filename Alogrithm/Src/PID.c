@@ -27,12 +27,12 @@ PID pid_M2006Pushrop_angle=
 {5,0.01,0,0x1000,0x5000,0,0,0,0,0,0};
 
 PID pid_D4310Yaw_speed=
-{1,0,1,0x1000,0x300,0,0,0,0,0,0};
+{1,0,2,0x1000,0x300,0,0,0,0,0,0};
 
 PID pid_D4310Yaw_angle=
-{1,0,1,0x1000,0x3000,0,0,0,0,0,0};
+{20,0,30,0x1000,0x3000,0,0,0,0,0,0};
 
-int32_t pid_output(PID *pid, int16_t feedback, int16_t target) 
+float pid_output(PID *pid, float feedback, float target) 
 {
     // 更新误差
     pid->error_last = pid->error_now;
@@ -41,7 +41,7 @@ int32_t pid_output(PID *pid, int16_t feedback, int16_t target)
 
 
     // 计算P部分
-    int32_t pout = pid->kp * pid->error_now;
+    float pout = pid->kp * pid->error_now;
 	pid->pout = pout;
 
     // 计算并限制I部分
@@ -55,7 +55,7 @@ int32_t pid_output(PID *pid, int16_t feedback, int16_t target)
 
 
     // 计算D部分
-    int32_t dout = pid->kd * (pid->error_now - pid->error_last);
+    float dout = pid->kd * (pid->error_now - pid->error_last);
 	pid->dout = dout;
 
     // 计算输出并限制
@@ -70,3 +70,5 @@ int32_t pid_output(PID *pid, int16_t feedback, int16_t target)
 
     return pid->output;
 }
+
+

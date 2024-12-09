@@ -11,6 +11,8 @@ void enable_damiao_motor(uint16_t id);
 void disable_damiao_motor(uint16_t id);
 void ctrl_damiao_motor(uint16_t id, float _pos, float _vel, float _KP, float _KD, float _torq);
 void ctrl_torq_damiao_motor( uint16_t id, float _torq);
+void ctrl_speed_damiao_motor( uint16_t id, float speed);
+void ctrl_position_damiao_motor( uint16_t id, float position);
 
  typedef struct 
 {

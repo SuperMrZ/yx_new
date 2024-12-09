@@ -140,13 +140,17 @@ void ctrl_torq_damiao_motor( uint16_t id, float _torq)
 
 void ctrl_speed_damiao_motor( uint16_t id, float speed)
 {
-  int32_t currnt;
-  currnt = pid_output(&pid_D4310Yaw_speed,damiao_recieve_pitch.velocity,speed);
-  ctrl_torq_damiao_motor(id,currnt);
+  float torq;
+  torq = pid_output(&pid_D4310Yaw_speed,damiao_recieve_pitch.velocity,speed);
+  ctrl_torq_damiao_motor(id,torq);
 } 
 
 void ctrl_position_damiao_motor( uint16_t id, float position)
 {
-  
+  float speed;
+  speed = pid_output(&pid_D4310Yaw_angle,damiao_recieve_pitch.position,position);
+  ctrl_speed_damiao_motor(id,speed);
+
+
 
 } 

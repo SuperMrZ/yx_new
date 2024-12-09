@@ -10,18 +10,18 @@ typedef struct
 float kp;
 float ki;
 float kd;
-int16_t maxI;  //maxI积分限幅
-int16_t maxO;  //maxO输出限幅
-int16_t error_now;
-int16_t error_last;
-int32_t pout ;
-int16_t iout;
-int32_t dout;
-int32_t output;
+float maxI;  //maxI积分限幅
+float maxO;  //maxO输出限幅
+float error_now;
+float error_last;
+float pout ;
+float iout;
+float dout;
+float output;
 
 } PID;
 
-int32_t pid_output(PID *pid, int16_t feedback, int16_t target) ;
+float pid_output(PID *pid, float feedback, float target) ;
 
 
 extern PID pid_M3508Friction[4];
@@ -36,3 +36,5 @@ extern PID pid_D4310Yaw_angle;
 
 
 #endif
+
+

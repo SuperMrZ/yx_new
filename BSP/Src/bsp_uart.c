@@ -4,11 +4,13 @@ gambleState gamble_state;
 
 extern SBUS_Buffer SBUS;
 extern uint8_t SBUS_RXBuffer[25];//声明遥控器接收缓存数组
+extern damiao_recieve damiao_recieve_pitch;
 
 int32_t pushrot_M2006_positionTarget;
 int16_t M3508Friction_speedTarget[3];
 int32_t Load_M3508_positionTarget;
 int16_t Load_M3508_speedTarget;
+float YAW_D4310_positiontarget;
 
 void remoteDecode();
 
@@ -55,6 +57,8 @@ void remoteDecode()
     SBUS.SE = SBUS.Ch8;
     SBUS.SG = SBUS.Ch9;
 
+    
+
     if(SBUS.SF ==353)//急停
     {
         disable_damiao_motor(0x01);
@@ -70,6 +74,15 @@ void remoteDecode()
     if(SBUS.SF == 1695)
     {
         enable_damiao_motor(0x01);
+        YAW_D4310_positiontarget = YAW_D4310_positiontarget + (float)(SBUS.Ch2-1024)*0.00005;
+        if(YAW_D4310_positiontarget >11)
+        {
+            YAW_D4310_positiontarget=11;
+        }
+        if(YAW_D4310_positiontarget<-11)
+        {
+            YAW_D4310_positiontarget=-11;
+        }
         if(SBUS.SH == 1695 && SBUS.SH_last == 353 && gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)
         {
             Load_M3508_positionTarget += 8192*10;

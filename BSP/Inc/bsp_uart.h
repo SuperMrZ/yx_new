@@ -3,6 +3,7 @@
 #include "usart.h"
 #include "main.h"
 #include "motorCmd.h"
+#include "bsp_can.h"
 
 
 
@@ -50,6 +51,7 @@ extern int32_t pushrot_M2006_positionTarget;
 extern int32_t Load_M3508_positionTarget;
 extern int16_t Load_M3508_speedTarget;
 extern int16_t M3508Friction_speedTarget[3];
+extern float YAW_D4310_positiontarget;
 
  
 

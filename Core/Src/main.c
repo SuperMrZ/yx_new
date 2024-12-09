@@ -132,6 +132,7 @@ int main(void)
   /******************/
   pushrot_M2006_positionTarget = M2006Pushrop.ecd;
   Load_M3508_positionTarget = M3508Load.ecd;
+  YAW_D4310_positiontarget  = damiao_recieve_pitch.position;
   gamble_state.bullet = 1;
   gamble_state.pushrot_position = 2;
   

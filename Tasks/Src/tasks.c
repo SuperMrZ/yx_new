@@ -36,7 +36,7 @@ void Sendmessage(void *argument)
   {
     Cmd_gamble2006_currnt();
     Cmd_gamble3508_currnt();
-    ctrl_torq_damiao_motor(0x01,0.1);
+    ctrl_position_damiao_motor(0x01,YAW_D4310_positiontarget);
 
     osDelay(1);
   }
