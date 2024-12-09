@@ -7,6 +7,7 @@
 
 extern int16_t M3508Friction_currnt[4];
 extern int16_t M3508Load_currnt;
+extern int16_t M2006Pushrop_currnt;
 
 
 extern PID pid_M3508Friction[4];

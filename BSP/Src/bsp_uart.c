@@ -55,6 +55,57 @@ void remoteDecode()
     SBUS.SE = SBUS.Ch8;
     SBUS.SG = SBUS.Ch9;
 
+    if(SBUS.SF ==353)//急停
+    {
+        disable_damiao_motor(0x01);
+        M3508Friction_currnt[0]=0;
+        M3508Friction_currnt[1]=0;
+        M3508Friction_currnt[2]=0;
+        M3508Friction_currnt[3]=0;
+        M3508Load_currnt       =0;
+        M2006Pushrop_currnt    =0;
+
+
+    }
+    if(SBUS.SF == 1695)
+    {
+        enable_damiao_motor(0x01);
+        if(SBUS.SH == 1695 && SBUS.SH_last == 353 && gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)
+        {
+            Load_M3508_positionTarget += 8192*10;
+        }
+
+        if(SBUS.SG == 1024)
+        {
+            Load_M3508_speedTarget =0;
+        }
+        if(SBUS.SG == 353)
+        {
+            Load_M3508_speedTarget =-500;
+        }
+        if(SBUS.SG == 1695)
+        {
+            Load_M3508_speedTarget =500;
+        }
+
+
+        if (SBUS.SE == 353)
+        {
+            M3508Friction_speedTarget[0]=0;
+            M3508Friction_speedTarget[1]=0;
+            M3508Friction_speedTarget[2]=0;
+        }
+
+        if (SBUS.SE == 1024)
+        {
+            M3508Friction_speedTarget[0]=8000;
+            M3508Friction_speedTarget[1]=-8000;
+            M3508Friction_speedTarget[2]=8000;
+        }
+
+    }
+
+
 
     // if(SBUS.SG ==1695 && SBUS.SG_last ==1024 && gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)
     // {
@@ -80,45 +131,10 @@ void remoteDecode()
     // }
 
     // if(SBUS.SH == 1695 && SBUS.SH_last == 353 && gamble_state.bullet ==0 && gamble_state.pushrot_position ==2)
-    if(SBUS.SH == 1695 && SBUS.SH_last == 353 && gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)
-    {
-        Load_M3508_positionTarget += 8192*10;
-    }
-
-    if(SBUS.SG == 1024)
-    {
-        Load_M3508_speedTarget =0;
-    }
-        if(SBUS.SG == 353)
-    {
-        Load_M3508_speedTarget =-500;
-    }
-        if(SBUS.SG == 1695)
-    {
-        Load_M3508_speedTarget =500;
-    }
 
 
-    if (SBUS.SE == 353)
-    {
-        M3508Friction_speedTarget[0]=0;
-        M3508Friction_speedTarget[1]=0;
-        M3508Friction_speedTarget[2]=0;
-    }
 
-    if (SBUS.SE == 1024)
-    {
-        M3508Friction_speedTarget[0]=8000;
-        M3508Friction_speedTarget[1]=-8000;
-        M3508Friction_speedTarget[2]=8000;
-    }
 
-    //     if (SBUS.SE == 1695)
-    // {
-    //     M3508Friction_speedTarget[0]=7000;
-    //     M3508Friction_speedTarget[1]=-7000;
-    //     M3508Friction_speedTarget[2]=7000;
-    // }
     
     
 

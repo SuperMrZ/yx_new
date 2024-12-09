@@ -14,18 +14,16 @@ void StartTask02(void *argument)
   for(;;)
   {
     // pushrop_Move(pushrot_M2006_positionTarget);
-     osDelay(1);
-
-     M3508Load_Move(Load_M3508_positionTarget);
-    
+    osDelay(1);
+    if(SBUS.SF == 1695)
+    {
+    M3508Load_Move(Load_M3508_positionTarget);
     cmd_M3508Friction_speed(M3508Friction_speedTarget);
     cmd_M2006pushrop_speed(Load_M3508_speedTarget);
+    }
 
-    
 
-    
-    
-  
+
 
     osDelay(1);   
   }
@@ -38,6 +36,7 @@ void Sendmessage(void *argument)
   {
     Cmd_gamble2006_currnt();
     Cmd_gamble3508_currnt();
+    ctrl_torq_damiao_motor(0x01,0.1);
 
     osDelay(1);
   }

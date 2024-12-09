@@ -113,7 +113,7 @@ int main(void)
   MX_USART3_UART_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-   __HAL_DMA_DISABLE_IT(huart3.hdmarx ,DMA_IT_HT );  //防止接收到一半就停止，跟上一句一定要配套�?????
+   __HAL_DMA_DISABLE_IT(huart3.hdmarx ,DMA_IT_HT );  //防止接收到一半就停止，跟上一句一定要配套�?????
    __HAL_UART_ENABLE_IT(&huart3, UART_IT_IDLE); //使能IDLE中断
   HAL_UARTEx_ReceiveToIdle_DMA(&huart3,SBUS_RXBuffer,25);
 
@@ -121,10 +121,10 @@ int main(void)
   
   BspCan1Init();
 
-  HAL_Delay(1000);
+  HAL_Delay(100);
   
-  //推杆回�??�?3位置
-  // while(M2006Pushrop.given_current >1000)//大于某个说明到底�?
+  //推杆回�??�?3位置
+  // while(M2006Pushrop.given_current >1000)//大于某个说明到底�?
   // {
     
 
@@ -158,7 +158,6 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     target[0]= 1000*sin_signal;
-    disable_damiao_motor(0x01);
    
     //cmd_M3508Friction_angle(target);
 

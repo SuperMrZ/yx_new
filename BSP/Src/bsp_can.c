@@ -81,7 +81,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
         //在下面进行解码begin
         switch (hcan1RxFrame.header.StdId)
         {
-        case 0x114:
+        case 0x20:
         {
            	damiao_recieve_pitch.p=(hcan1RxFrame.data[1] << 8) |hcan1RxFrame.data[2];
 		    damiao_recieve_pitch.v=(hcan1RxFrame.data[3] << 4) |(hcan1RxFrame.data[4] >> 4);

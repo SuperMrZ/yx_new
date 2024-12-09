@@ -21,7 +21,7 @@ int32_t output;
 
 } PID;
 
-
+int32_t pid_output(PID *pid, int16_t feedback, int16_t target) ;
 
 
 extern PID pid_M3508Friction[4];
@@ -30,5 +30,9 @@ extern PID pid_M3508Load_speed;
 extern PID pid_M3508Laod_angle;
 extern PID pid_M2006Pushrop_speed;
 extern PID pid_M2006Pushrop_angle;
+extern PID pid_D4310Yaw_speed;
+extern PID pid_D4310Yaw_angle;
+
+
 
 #endif

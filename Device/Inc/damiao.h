@@ -1,6 +1,8 @@
 #ifndef _DAMIAO_H
 #define _DAMIAO_H
 #include "bsp_can.h"
+#include "PID.h"
+#include "main.h"
 
 float uint_to_float(uint16_t x_int, float x_min, float x_max, int bits);
 int float_to_uint(float x, float x_min, float x_max, int bits);

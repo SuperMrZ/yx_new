@@ -15,16 +15,22 @@ PID pid_M3508Friction_angle[4] = {
 };
 
 PID pid_M3508Load_speed=
-{5,0.1,0,0x1000,0x5000,0,0,0,0,0,0};
+{3,0.1,4,0x1000,0x5000,0,0,0,0,0,0};
 
 PID pid_M3508Laod_angle=
-{1,0,0.2,0x1000,0x5000,0,0,0,0,0,0};
+{1,0,3,0x1000,0x5000,0,0,0,0,0,0};
 
 PID pid_M2006Pushrop_speed=
 {5,0.1,0,0x1000,0x5000,0,0,0,0,0,0};
 
 PID pid_M2006Pushrop_angle=
 {5,0.01,0,0x1000,0x5000,0,0,0,0,0,0};
+
+PID pid_D4310Yaw_speed=
+{1,0,1,0x1000,0x300,0,0,0,0,0,0};
+
+PID pid_D4310Yaw_angle=
+{1,0,1,0x1000,0x3000,0,0,0,0,0,0};
 
 int32_t pid_output(PID *pid, int16_t feedback, int16_t target) 
 {

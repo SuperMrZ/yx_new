@@ -1,5 +1,9 @@
 #include "damiao.h"
 
+
+int16_t D4310Pitch_currnt[4];
+extern  damiao_recieve damiao_recieve_pitch;
+
 float	uint_to_float(uint16_t x_int, float x_min, float x_max, int bits){
     /// converts unsigned int to float, given range and number of bits ///
   
@@ -133,3 +137,16 @@ void ctrl_torq_damiao_motor( uint16_t id, float _torq)
 		
 		HAL_CAN_AddTxMessage(&hcan1, &damiao_tx_message1, damiao_can_send_data1, &send_mail_box);
 }
+
+void ctrl_speed_damiao_motor( uint16_t id, float speed)
+{
+  int32_t currnt;
+  currnt = pid_output(&pid_D4310Yaw_speed,damiao_recieve_pitch.velocity,speed);
+  ctrl_torq_damiao_motor(id,currnt);
+} 
+
+void ctrl_position_damiao_motor( uint16_t id, float position)
+{
+  
+
+} 
