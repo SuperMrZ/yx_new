@@ -52,6 +52,8 @@ extern int32_t Load_M3508_positionTarget;
 extern int16_t Load_M3508_speedTarget;
 extern int16_t M3508Friction_speedTarget[3];
 extern float YAW_D4310_positiontarget;
+extern int16_t YawPitch6020_speedtarget;
+extern float Yaw6020_positiontarget;
 
  
 

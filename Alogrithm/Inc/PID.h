@@ -30,8 +30,10 @@ extern PID pid_M3508Load_speed;
 extern PID pid_M3508Laod_angle;
 extern PID pid_M2006Pushrop_speed;
 extern PID pid_M2006Pushrop_angle;
-extern PID pid_D4310Yaw_speed;
-extern PID pid_D4310Yaw_angle;
+extern PID pid_D4310Pitch_speed;
+extern PID pid_D4310Pitch_angle;
+extern PID pid_M6020Yaw_speed;
+extern PID pid_M6020Yaw_angle;
 
 
 

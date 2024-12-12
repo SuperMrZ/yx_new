@@ -21,6 +21,7 @@
 #include "cmsis_os.h"
 #include "can.h"
 #include "dma.h"
+#include "spi.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -46,6 +47,7 @@ uint8_t SBUS_RXBuffer[25];
 motorReceiveInfo M3508Friction[3];
 motorReceiveInfo M3508Load;
 motorReceiveInfo M2006Pushrop;
+motorReceiveInfo M6020Yaw;
 damiao_recieve damiao_recieve_pitch;
 extern float sin_signal;
 extern gambleState gamble_state;
@@ -112,8 +114,9 @@ int main(void)
   MX_CAN2_Init();
   MX_USART3_UART_Init();
   MX_TIM3_Init();
+  MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-   __HAL_DMA_DISABLE_IT(huart3.hdmarx ,DMA_IT_HT );  //防止接收到一半就停止，跟上一句一定要配套�?????
+   __HAL_DMA_DISABLE_IT(huart3.hdmarx ,DMA_IT_HT );  //防止接收到一半就停止，跟上一句一定要配套�??????
    __HAL_UART_ENABLE_IT(&huart3, UART_IT_IDLE); //使能IDLE中断
   HAL_UARTEx_ReceiveToIdle_DMA(&huart3,SBUS_RXBuffer,25);
 
@@ -123,8 +126,8 @@ int main(void)
 
   HAL_Delay(100);
   
-  //推杆回�??�?3位置
-  // while(M2006Pushrop.given_current >1000)//大于某个说明到底�?
+  //推杆回�??�??3位置
+  // while(M2006Pushrop.given_current >1000)//大于某个说明到底�??
   // {
     
 
@@ -133,6 +136,7 @@ int main(void)
   pushrot_M2006_positionTarget = M2006Pushrop.ecd;
   Load_M3508_positionTarget = M3508Load.ecd;
   YAW_D4310_positiontarget  = damiao_recieve_pitch.position;
+  Yaw6020_positiontarget    = M6020Yaw.ecd;
   gamble_state.bullet = 1;
   gamble_state.pushrot_position = 2;
   

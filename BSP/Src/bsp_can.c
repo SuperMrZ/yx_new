@@ -10,6 +10,7 @@ CAN_TxFrameTypeDef hcan2TxFrame;
 extern motorReceiveInfo M3508Friction[4];
 extern motorReceiveInfo M2006Pushrop;
 extern motorReceiveInfo M3508Load;
+extern motorReceiveInfo M6020Yaw;
 extern damiao_recieve damiao_recieve_pitch;
 /* Private functions ---------------------------------------------------------*/
 /**
@@ -124,7 +125,17 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 		    M2006Pushrop.temperate=hcan1RxFrame.data[6];//电机温度	
 
         }
-            /* code */
+          
+            break;
+
+        case 0x20A:
+        {
+            M6020Yaw.ecd=(hcan1RxFrame.data[0]<<8)|hcan1RxFrame.data[1];//转子机械角度
+		    M6020Yaw.speed_rpm=(hcan1RxFrame.data[2]<<8)|hcan1RxFrame.data[3];//转子转速
+	    	M6020Yaw.given_current=(hcan1RxFrame.data[4]<<8)|hcan1RxFrame.data[5];//实际转矩电流
+		    M6020Yaw.temperate=hcan1RxFrame.data[6];//电机温度
+
+        }
             break;
         
         default:

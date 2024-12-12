@@ -11,6 +11,8 @@ int16_t M3508Friction_speedTarget[3];
 int32_t Load_M3508_positionTarget;
 int16_t Load_M3508_speedTarget;
 float YAW_D4310_positiontarget;
+int16_t YawPitch6020_speedtarget;
+float Yaw6020_positiontarget;
 
 void remoteDecode();
 
@@ -68,6 +70,7 @@ void remoteDecode()
         M3508Friction_currnt[3]=0;
         M3508Load_currnt       =0;
         M2006Pushrop_currnt    =0;
+        M6020Yaw_currrnt       =0;
 
 
     }
@@ -75,6 +78,7 @@ void remoteDecode()
     {
         enable_damiao_motor(0x01);
         YAW_D4310_positiontarget = YAW_D4310_positiontarget + (float)(SBUS.Ch2-1024)*0.00005;
+        Yaw6020_positiontarget = Yaw6020_positiontarget + (float)(SBUS.Ch1-1024)*0.5;
         if(YAW_D4310_positiontarget >11)
         {
             YAW_D4310_positiontarget=11;
@@ -83,6 +87,14 @@ void remoteDecode()
         {
             YAW_D4310_positiontarget=-11;
         }
+        if(Yaw6020_positiontarget > 8191)
+        {
+            Yaw6020_positiontarget =1;
+        }
+         if(Yaw6020_positiontarget <1)
+        {
+            Yaw6020_positiontarget =8191;
+        }       
         if(SBUS.SH == 1695 && SBUS.SH_last == 353 && gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)
         {
             Load_M3508_positionTarget += 8192*10;

@@ -121,7 +121,7 @@ void ctrl_torq_damiao_motor( uint16_t id, float _torq)
 
     // CAN 数据帧配置
 		uint32_t send_mail_box;
-    damiao_tx_message1.StdId = id;//查阅C620手册，ID为1-4时发送标识为0x200
+    damiao_tx_message1.StdId = id;
     damiao_tx_message1.IDE = CAN_ID_STD;
     damiao_tx_message1.RTR = CAN_RTR_DATA;
     damiao_tx_message1.DLC = 0x08;
@@ -141,14 +141,14 @@ void ctrl_torq_damiao_motor( uint16_t id, float _torq)
 void ctrl_speed_damiao_motor( uint16_t id, float speed)
 {
   float torq;
-  torq = pid_output(&pid_D4310Yaw_speed,damiao_recieve_pitch.velocity,speed);
+  torq = pid_output(&pid_D4310Pitch_speed,damiao_recieve_pitch.velocity,speed);
   ctrl_torq_damiao_motor(id,torq);
 } 
 
 void ctrl_position_damiao_motor( uint16_t id, float position)
 {
   float speed;
-  speed = (SBUS.Ch2-1024)*0.005f + pid_output(&pid_D4310Yaw_angle,damiao_recieve_pitch.position,position);
+  speed = (SBUS.Ch2-1024)*0.005f + pid_output(&pid_D4310Pitch_angle,damiao_recieve_pitch.position,position);
   ctrl_speed_damiao_motor(id,speed);
 
 

@@ -34,7 +34,7 @@ float f[MAX_INDEX] = {1.000000, 1.499250, 2.000000, 2.500000, 3.003003, 3.496503
 float tt[MAX_INDEX];
 int sin_signal_switch;
 int i = 0;
-float time = 0;
+// float time = 0;
 float sin_signal;
 /* USER CODE END 0 */
 

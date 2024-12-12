@@ -4,6 +4,10 @@
 #include "main.h"
 #include "bsp_uart.h"
 #include "motorCmd.h"
+#include "BMI088.h"
+#include "bmi088reg.h"
+#include "IMU.h"
+
 
 
 

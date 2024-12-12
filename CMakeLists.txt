@@ -57,6 +57,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Device/Src/motorCmd.c
     Device/Src/damiao.c
     Tasks/Src/tasks.c
+    Device/Src/BMI088.c
+    Device/Src/IMU.c
 
 
 

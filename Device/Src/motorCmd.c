@@ -3,6 +3,7 @@
 int16_t M3508Friction_currnt[4];
 int16_t M3508Load_currnt;
 int16_t M2006Pushrop_currnt;
+int16_t M6020Yaw_currrnt;
 
 
 void cmd_M3508Friction_speed(int16_t target[3])
@@ -119,6 +120,55 @@ void cmd_M2006pushrop_angle(int16_t target)
 
 }
 
+
+void cmd_M6020Yaw_speed(int16_t target)
+{
+    int32_t motor_currnt;
+	
+        motor_currnt = pid_output(&pid_M6020Yaw_speed,M6020Yaw.speed_rpm,target); 
+        // if (motor_currnt>20000)
+        // {
+        //     motor_currnt =20000;
+        // }
+        // if(motor_currnt< -20000)
+        // {
+        //     motor_currnt =-20000;
+        // }
+        
+        M6020Yaw_currrnt = motor_currnt;
+    
+    //CAN_SendData(1,0x200,motor_currnt);
+
+
+}
+
+void cmd_M6020Yaw_angle(int16_t target)
+{
+    int16_t speed;
+    int16_t cur;
+
+    
+        cur=M6020Yaw.ecd;
+        if(target-cur>4096)
+        {
+            cur +=8192;
+        }
+        else if(target-cur<=-4096)
+        {
+            cur =cur-8192;
+        }
+        speed = pid_output(&pid_M6020Yaw_angle,cur,target); 
+    
+    cmd_M6020Yaw_speed(speed);
+
+}
+
+
+
+
+
+
+
 void Cmd_gamble3508_currnt(void)
 {
     int16_t currnt_target[4];
@@ -141,6 +191,21 @@ void Cmd_gamble2006_currnt(void)
     CAN_SendData(1,0x1FF,currnt_target);
 
 }
+
+
+void Cmd_gamble6020_currnt(void)
+{
+    int16_t currnt_target[4];
+    currnt_target[0] = 0;
+    currnt_target[1] = M6020Yaw_currrnt;
+    // currnt_target[1] = -1000;
+    currnt_target[2] = 0;
+    currnt_target[3] = 0;
+
+    CAN_SendData(1,0x2FE,currnt_target);  
+}
+
+
 
 
 

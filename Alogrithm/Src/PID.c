@@ -26,11 +26,19 @@ PID pid_M2006Pushrop_speed=
 PID pid_M2006Pushrop_angle=
 {5,0.01,0,0x1000,0x5000,0,0,0,0,0,0};
 
-PID pid_D4310Yaw_speed=
-{1,0,2,0x1000,0x300,0,0,0,0,0,0};
+PID pid_M6020Yaw_speed=
+{8,0,2,0x1000,0x3000,0,0,0,0,0,0};
 
-PID pid_D4310Yaw_angle=
+PID pid_M6020Yaw_angle=
+{1,0,2,0x1000,0x3000,0,0,0,0,0,0};
+
+PID pid_D4310Pitch_speed=
+{1,0,2,0x1000,0x3000,0,0,0,0,0,0};
+
+PID pid_D4310Pitch_angle=
 {20,0,30,0x1000,0x3000,0,0,0,0,0,0};
+
+
 
 float pid_output(PID *pid, float feedback, float target) 
 {
