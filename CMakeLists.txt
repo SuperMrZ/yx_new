@@ -16,6 +16,16 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
 
 
+
+# 设置 ARM DSP 库的路径
+set(ARM_DSP_LIB ${CMAKE_SOURCE_DIR}/Middlewares/ST/ARM/DSP/Lib/libarm_cortexM4lf_math.a)
+
+
+# 检查库文件是否存在
+if(NOT EXISTS ${ARM_DSP_LIB})
+    message(FATAL_ERROR "ARM DSP library not found at: ${ARM_DSP_LIB}")
+endif()
+
 # Define the build type
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
@@ -30,12 +40,14 @@ include("cmake/gcc-arm-none-eabi.cmake")
 # Enable compile command to ease indexing with e.g. clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
-# Enable CMake support for ASM and C languages
-enable_language(C ASM)
+
 
 # Core project settings
 project(${CMAKE_PROJECT_NAME})
 message("Build type: " ${CMAKE_BUILD_TYPE})
+
+# Enable CMake support for ASM and C languages
+enable_language(C ASM)
 
 # Create an executable object type
 add_executable(${CMAKE_PROJECT_NAME})
@@ -48,6 +60,8 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined library search paths
 )
 
+
+
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
@@ -57,8 +71,25 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Device/Src/motorCmd.c
     Device/Src/damiao.c
     Tasks/Src/tasks.c
-    Device/Src/BMI088.c
-    Device/Src/IMU.c
+    Alogrithm/Src/controller.c
+    Alogrithm/Src/kalman_filter.c
+    Alogrithm/Src/QuaternionEKF.c
+    Alogrithm/Src/transfer.c
+    Alogrithm/Src/user_lib.c
+    BSP/Src/bsp_dwt.c
+    BSP/Src/bsp_PWM.c
+    BSP/Src/bsp_rc.c
+ 
+    Device/Src/BMI088driver.c
+    Device/Src/BMI088Middleware.c
+    Tasks/Src/ins_task.c
+
+
+    
+
+
+    
+ 
 
 
 
@@ -88,6 +119,8 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
 # Add linked libraries
 target_link_libraries(${CMAKE_PROJECT_NAME}
     stm32cubemx
+    ${ARM_DSP_LIB}
 
     # Add user defined libraries
 )
+

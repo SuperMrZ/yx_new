@@ -1,60 +1,52 @@
 #include "tasks.h"
 
  
-#define ALPHA 0.85
-acc_raw_data_t acc_raw_data={0,0,0};
-gyro_raw_data_t gyro_raw_data={0,0,0};
-float *time;
-float *temp;
-double quaternion[4]={1.0 , 0.0 , 0.0 , 0.0};
-double roll=0.0,pitch=0.0,yaw=0.0;
-double dt=0.133;
-double gyro[3]={0.0,0.0,0.0};
-double accel[3]={0.0,0.0,0.0}; 
 
 
-void pushrop_Move();
 void M3508Load_Move();
 
 extern SBUS_Buffer SBUS;
 
-
+/*第一个任务，用于计算数据*/
 void StartTask02(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
-   (void)argument;
-   bmi088_error_e BMI088_INIT();
-   BMI088_CONF_INIT();
 
   for(;;)
   {
-    // pushrop_Move(pushrot_M2006_positionTarget);
-    osDelay(1);
-    ReadAccData(&acc_raw_data);
-    ReadGyroData(&gyro_raw_data);
-    gyro[0]=gyro_raw_data.roll;
-    gyro[1]=gyro_raw_data.pitch;
-    gyro[2]=gyro_raw_data.yaw;
-    accel[0]=acc_raw_data.x;
-    accel[1]=acc_raw_data.y;
-    accel[2]=acc_raw_data.z; 
-    updateQuaternion(quaternion,gyro,dt);
-    quaternionToEuler(quaternion,&roll,&pitch,&yaw);
-    calculateAnglesFromAccel(accel,&roll,&pitch);
-    yaw += ALPHA*gyro[2]*dt;
-    ReadAccSensorTime(time);
-    ReadAccTemperature(temp);
+
+    /*imu解算开始*/
+
+    /*imu解算结束*/
+
+    /*电机电流控制计算开始*/
+
     if(SBUS.SF == 1695)
     {
+      if(SBUS.SG ==353 && back_flag ==1)
+      {
+        cmd_M2006pushrop_speed(pushrot_M2006_speedTarget);
 
-    M3508Load_Move(Load_M3508_positionTarget);
-    cmd_M3508Friction_speed(M3508Friction_speedTarget);
-    cmd_M2006pushrop_speed(Load_M3508_speedTarget);
-    cmd_M6020Yaw_angle(Yaw6020_positiontarget);
+      }
+      if(SBUS.SG ==353 && back_flag ==0)
+      {
+        M2006Pushrop_currnt =0;
+
+      }
+      if(SBUS.SG !=353)
+      {
+        M2006PushRop_Move();
+      }
+      
+      M3508Load_Move();
+
+      cmd_M3508Friction_speed(M3508Friction_speedTarget);
+
+      cmd_M6020Yaw_angle(Yaw6020_positiontarget);
     }
 
-
+   /*电机电流控制计算结束*/
 
 
     osDelay(1);   
@@ -62,6 +54,8 @@ void StartTask02(void *argument)
   /* USER CODE END StartDefaultTask */
 }
 
+
+/*第二个任务，用于发送数据*/
 void Sendmessage(void *argument)
 {
   while(1)
@@ -70,7 +64,7 @@ void Sendmessage(void *argument)
    Cmd_gamble3508_currnt();
     
    // osDelay(1);
-    ctrl_position_damiao_motor(0x01,YAW_D4310_positiontarget);
+    //ctrl_position_damiao_motor(0x01,YAW_D4310_positiontarget);
     
     osDelay(1);
     Cmd_gamble6020_currnt();
@@ -79,41 +73,18 @@ void Sendmessage(void *argument)
 }
 
 
-
-
-
-
-
-void pushrop_Move()
+void StartINSTask(void *argument)
 {
-  if(pushrot_M2006_positionTarget>8192)
+  /* USER CODE BEGIN StartINSTask */
+   INS_Init();
+  /* Infinite loop */
+  for(;;)
   {
-    cmd_M2006pushrop_speed(2000);
-    if(M2006Pushrop.last_ecd-M2006Pushrop.ecd > 4096)
-    {
-      pushrot_M2006_positionTarget = pushrot_M2006_positionTarget - 8192;
-    }
-    M2006Pushrop.last_ecd = M2006Pushrop.ecd;
-
+    INS_Task();
+    osDelay(1);
   }
-    if(pushrot_M2006_positionTarget<0)
-  {
-    cmd_M2006pushrop_speed(-2000);
-    if(M2006Pushrop.ecd-M2006Pushrop.last_ecd > 4096)
-    {
-      pushrot_M2006_positionTarget = pushrot_M2006_positionTarget + 8192;
-    }
-    M2006Pushrop.last_ecd = M2006Pushrop.ecd;
-
-  }
-
-
-  if(pushrot_M2006_positionTarget<8192 && pushrot_M2006_positionTarget>0)
-  {
-    cmd_M2006pushrop_angle(pushrot_M2006_positionTarget);
-  }
+  /* USER CODE END StartINSTask */
 }
-
 
 void M3508Load_Move()
 {
@@ -125,10 +96,38 @@ void M3508Load_Move()
       Load_M3508_positionTarget=Load_M3508_positionTarget-8192;
     }
     M3508Load.last_ecd = M3508Load.ecd;
-
   }
+
   if(Load_M3508_positionTarget<8192)
   {
     cmd_M3508Load_angle(Load_M3508_positionTarget);
+  }
+}
+
+
+void M2006PushRop_Move()
+{
+  if(pushrot_M2006_positionTarget > 8192)
+  {
+    cmd_M2006pushrop_speed(3000);
+    if(M2006Pushrop.last_ecd-M2006Pushrop.ecd>4096)
+    {
+      pushrot_M2006_positionTarget -= 8192;
+    }
+    M2006Pushrop.last_ecd = M2006Pushrop.ecd;
+  }
+  if(pushrot_M2006_positionTarget < 0)
+  {
+    cmd_M2006pushrop_speed(-3000);
+    if(M2006Pushrop.ecd - M2006Pushrop.last_ecd>4096)
+    {
+      pushrot_M2006_positionTarget += 8192;
+    }
+    M2006Pushrop.last_ecd = M2006Pushrop.ecd;
+  } 
+
+  if(0 < pushrot_M2006_positionTarget && pushrot_M2006_positionTarget <8192)
+  {
+    cmd_M2006pushrop_angle(pushrot_M2006_positionTarget);
   }
 }

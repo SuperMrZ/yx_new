@@ -6,13 +6,18 @@ extern SBUS_Buffer SBUS;
 extern uint8_t SBUS_RXBuffer[25];//声明遥控器接收缓存数组
 extern damiao_recieve damiao_recieve_pitch;
 
+
+
 int32_t pushrot_M2006_positionTarget;
+int16_t pushrot_M2006_speedTarget;
 int16_t M3508Friction_speedTarget[3];
 int32_t Load_M3508_positionTarget;
 int16_t Load_M3508_speedTarget;
 float YAW_D4310_positiontarget;
 int16_t YawPitch6020_speedtarget;
 float Yaw6020_positiontarget;
+
+int8_t back_flag = 1;
 
 void remoteDecode();
 
@@ -79,6 +84,7 @@ void remoteDecode()
         enable_damiao_motor(0x01);
         YAW_D4310_positiontarget = YAW_D4310_positiontarget + (float)(SBUS.Ch2-1024)*0.00005;
         Yaw6020_positiontarget = Yaw6020_positiontarget + (float)(SBUS.Ch1-1024)*0.5;
+
         if(YAW_D4310_positiontarget >11)
         {
             YAW_D4310_positiontarget=11;
@@ -87,6 +93,7 @@ void remoteDecode()
         {
             YAW_D4310_positiontarget=-11;
         }
+
         if(Yaw6020_positiontarget > 8191)
         {
             Yaw6020_positiontarget =1;
@@ -94,25 +101,45 @@ void remoteDecode()
          if(Yaw6020_positiontarget <1)
         {
             Yaw6020_positiontarget =8191;
-        }       
+        }
+
         if(SBUS.SH == 1695 && SBUS.SH_last == 353 && gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)
         {
             Load_M3508_positionTarget += 8192*10;
         }
 
-        if(SBUS.SG == 1024)
+        /*推杆状态判定开始*/
+        if(SBUS.SG == 353 && back_flag ==1)
         {
-            Load_M3508_speedTarget =0;
-        }
-        if(SBUS.SG == 353)
-        {
-            Load_M3508_speedTarget =-500;
-        }
-        if(SBUS.SG == 1695)
-        {
-            Load_M3508_speedTarget =500;
-        }
+            pushrot_M2006_speedTarget =-2000;
+            if( M2006Pushrop.given_current <-6500)
+            {
+                back_flag = 0;
 
+            }
+
+        }
+         if(SBUS.SG == 353 && back_flag ==0)
+        {
+            pushrot_M2006_speedTarget =0;
+
+
+        }       
+
+        if(SBUS.SG == 1024 && SBUS.SG_last ==353)
+        {
+            pushrot_M2006_positionTarget +=8192*60;
+            back_flag = 1;
+        }
+        if(SBUS.SG == 1695 && SBUS.SG_last ==1024)
+        {
+            pushrot_M2006_positionTarget +=8192*10;
+        }
+        if(SBUS.SG == 1024 && SBUS.SG_last ==1695)
+        {
+            pushrot_M2006_positionTarget -=8192*10;
+        }              
+        /*推杆状态判断结束*/
 
         if (SBUS.SE == 353)
         {
@@ -129,33 +156,6 @@ void remoteDecode()
         }
 
     }
-
-
-
-    // if(SBUS.SG ==1695 && SBUS.SG_last ==1024 && gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)
-    // {
-    //     //2006旋转圈数
-    //     pushrot_M2006_positionTarget += 8192*10;//目标转10转
-
-    // }
-
-    //   if(SBUS.SG ==1024 && SBUS.SG_last ==353 && gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)
-    // {
-    //     //2006旋转圈数
-    //     pushrot_M2006_positionTarget += 8192*10;//目标转10转
-
-    // } 
-    //      if(SBUS.SG == 1024 && SBUS.SG_last == 1695 & gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)
-    // {
-    //     pushrot_M2006_positionTarget -= 8192*10;
-    // }
-    //      if(SBUS.SG == 353 && SBUS.SG_last == 1024 & gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)
-    // {
-
-    //     pushrot_M2006_positionTarget -= 8192*10;
-    // }
-
-    // if(SBUS.SH == 1695 && SBUS.SH_last == 353 && gamble_state.bullet ==0 && gamble_state.pushrot_position ==2)
 
 
 

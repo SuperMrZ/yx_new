@@ -68,6 +68,13 @@ const osThreadAttr_t sendmessage_attributes = {
   .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
+/* Definitions for INSTask */
+osThreadId_t INSTaskHandle;
+const osThreadAttr_t INSTask_attributes = {
+  .name = "INSTask",
+  .stack_size = 1024 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -77,6 +84,7 @@ const osThreadAttr_t sendmessage_attributes = {
 void StartDefaultTask(void *argument);
 extern void StartTask02(void *argument);
 extern void Sendmessage(void *argument);
+extern void StartINSTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -115,6 +123,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of sendmessage */
   sendmessageHandle = osThreadNew(Sendmessage, NULL, &sendmessage_attributes);
+
+  /* creation of INSTask */
+  INSTaskHandle = osThreadNew(StartINSTask, NULL, &INSTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
