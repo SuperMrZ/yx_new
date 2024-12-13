@@ -122,17 +122,19 @@ int main(void)
   MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
   DWT_Init(168);
-  while (BMI088_init(&hspi1, 1) != BMI088_NO_ERROR);
+   while (BMI088_init(&hspi1, 0) != BMI088_NO_ERROR);
+
+  
+  HAL_UARTEx_ReceiveToIdle_DMA(&huart3,SBUS_RXBuffer,25);
 
    __HAL_DMA_DISABLE_IT(huart3.hdmarx ,DMA_IT_HT );  //防止接收到一半就停止，跟上一句一定要配套�???????
    __HAL_UART_ENABLE_IT(&huart3, UART_IT_IDLE); //使能IDLE中断
-  HAL_UARTEx_ReceiveToIdle_DMA(&huart3,SBUS_RXBuffer,25);
 
   HAL_TIM_Base_Start_IT(&htim3);
   
   BspCan1Init();
 
-  HAL_Delay(100);
+   HAL_Delay(100);
   
   //推杆回�??�???3位置
   // while(M2006Pushrop.given_current >1000)//大于某个说明到底�???
