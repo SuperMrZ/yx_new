@@ -12,6 +12,10 @@ extern motorReceiveInfo M2006Pushrop;
 extern motorReceiveInfo M3508Load;
 extern motorReceiveInfo M6020Yaw;
 extern damiao_recieve damiao_recieve_pitch;
+
+
+
+
 /* Private functions ---------------------------------------------------------*/
 /**
   * @brief  BspCan1Init此函数用于can1的初始化
@@ -63,7 +67,7 @@ void BspCan2Init() {
     if (HAL_CAN_ConfigFilter(&hcan2, &filter) != HAL_OK) {
         Error_Handler();
     }
-    HAL_CAN_Start(&hcan1);
+    HAL_CAN_Start(&hcan2);
     HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO1_MSG_PENDING);
 }
 

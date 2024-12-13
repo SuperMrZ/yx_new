@@ -1,6 +1,6 @@
 #include "tasks.h"
 
- 
+ int16_t down_MEG[4];
 
 
 void M3508Load_Move();
@@ -62,9 +62,10 @@ void Sendmessage(void *argument)
   {
    Cmd_gamble2006_currnt();
    Cmd_gamble3508_currnt();
+  //  Down_SendMEG();
     
-   // osDelay(1);
-    //ctrl_position_damiao_motor(0x01,YAW_D4310_positiontarget);
+    
+    ctrl_position_damiao_motor(0x01,YAW_D4310_positiontarget);
     
     osDelay(1);
     Cmd_gamble6020_currnt();
@@ -80,7 +81,8 @@ void StartINSTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    INS_Task();
+    int16_t a;
+    //INS_Task();
     osDelay(1);
   }
   /* USER CODE END StartINSTask */
@@ -109,7 +111,7 @@ void M2006PushRop_Move()
 {
   if(pushrot_M2006_positionTarget > 8192)
   {
-    cmd_M2006pushrop_speed(3000);
+    cmd_M2006pushrop_speed(2000);
     if(M2006Pushrop.last_ecd-M2006Pushrop.ecd>4096)
     {
       pushrot_M2006_positionTarget -= 8192;
@@ -118,7 +120,7 @@ void M2006PushRop_Move()
   }
   if(pushrot_M2006_positionTarget < 0)
   {
-    cmd_M2006pushrop_speed(-3000);
+    cmd_M2006pushrop_speed(-2000);
     if(M2006Pushrop.ecd - M2006Pushrop.last_ecd>4096)
     {
       pushrot_M2006_positionTarget += 8192;
@@ -131,3 +133,13 @@ void M2006PushRop_Move()
     cmd_M2006pushrop_angle(pushrot_M2006_positionTarget);
   }
 }
+
+
+void Down_SendMEG()
+{
+  down_MEG[0]=SBUS.Ch3;
+  down_MEG[1]=SBUS.Ch4;
+  down_MEG[2]=SBUS.Ch1;
+  down_MEG[3]=SBUS.SA;
+  CAN_SendData(1,0x123,down_MEG);
+} 

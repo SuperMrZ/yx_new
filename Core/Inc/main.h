@@ -114,6 +114,9 @@ typedef struct{//25ֽSBUS洢ṹ
 	uint16_t SE_last;
 	uint16_t SG;
 	uint16_t SG_last;
+	uint16_t SA;
+	uint16_t SA_last;
+
 
 }SBUS_Buffer;
 /* USER CODE END Private defines */

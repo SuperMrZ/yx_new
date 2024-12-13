@@ -63,6 +63,7 @@ void remoteDecode()
     SBUS.SH = SBUS.Ch7;
     SBUS.SE = SBUS.Ch8;
     SBUS.SG = SBUS.Ch9;
+    SBUS.SA = SBUS.Ch10;
 
     
 
@@ -133,11 +134,11 @@ void remoteDecode()
         }
         if(SBUS.SG == 1695 && SBUS.SG_last ==1024)
         {
-            pushrot_M2006_positionTarget +=8192*10;
+            pushrot_M2006_positionTarget +=8192*50;
         }
         if(SBUS.SG == 1024 && SBUS.SG_last ==1695)
         {
-            pushrot_M2006_positionTarget -=8192*10;
+            pushrot_M2006_positionTarget -=8192*50;
         }              
         /*推杆状态判断结束*/
 
