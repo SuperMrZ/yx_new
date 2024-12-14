@@ -28,17 +28,21 @@ extern damiao_recieve damiao_recieve_pitch;
 
 void BspCan1Init() {
     CAN_FilterTypeDef filter;
-    filter.FilterBank = 0;
-    filter.FilterMode = CAN_FILTERMODE_IDMASK;
-    filter.FilterScale = CAN_FILTERSCALE_32BIT;
-    filter.FilterIdHigh = 0x0000;
-    filter.FilterIdLow = 0x0000;
-    filter.FilterMaskIdHigh = 0x0000;
-    filter.FilterMaskIdLow = 0x0000;
-    filter.FilterFIFOAssignment = CAN_FILTER_FIFO0;//FIFO0
-    filter.FilterActivation = ENABLE;
-    if (HAL_CAN_ConfigFilter(&hcan1, &filter) != HAL_OK) {
-        Error_Handler();
+    for(uint8_t FilterBank=0;FilterBank<14;FilterBank++)
+	{
+        filter.FilterBank = FilterBank;
+        filter.FilterMode = CAN_FILTERMODE_IDMASK;
+        filter.FilterScale = CAN_FILTERSCALE_32BIT;
+        filter.FilterIdHigh = 0x0000;
+        filter.FilterIdLow = 0x0000;
+        filter.FilterMaskIdHigh = 0x0000;
+        filter.FilterMaskIdLow = 0x0000;
+        filter.FilterFIFOAssignment = CAN_FILTER_FIFO0;//FIFO0
+        filter.SlaveStartFilterBank = 14; 
+        filter.FilterActivation = ENABLE;
+        if (HAL_CAN_ConfigFilter(&hcan1, &filter) != HAL_OK) {
+            Error_Handler();
+        }
     }
     HAL_CAN_Start(&hcan1);
     HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
@@ -55,7 +59,7 @@ void BspCan1Init() {
 
 void BspCan2Init() {
     CAN_FilterTypeDef filter;
-    filter.FilterBank = 0;
+    filter.FilterBank = 14;
     filter.FilterMode = CAN_FILTERMODE_IDMASK;
     filter.FilterScale = CAN_FILTERSCALE_32BIT;
     filter.FilterIdHigh = 0x0000;
@@ -63,6 +67,7 @@ void BspCan2Init() {
     filter.FilterMaskIdHigh = 0x0000;
     filter.FilterMaskIdLow = 0x0000;
     filter.FilterFIFOAssignment = CAN_FILTER_FIFO1;//FIFO0
+    filter.SlaveStartFilterBank = 14; 
     filter.FilterActivation = ENABLE;
     if (HAL_CAN_ConfigFilter(&hcan2, &filter) != HAL_OK) {
         Error_Handler();
@@ -165,7 +170,7 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan)
 	if(hcan->Instance == CAN1)//这个地方有疑问
 	{
 
-		HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &hcan1RxFrame.header, hcan1RxFrame.data);
+		HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO1, &hcan1RxFrame.header, hcan1RxFrame.data);
         //在下面进行解码begin
 
 
@@ -174,7 +179,7 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan)
 	else if(hcan->Instance == CAN2)
 	{
 
-		HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &hcan2RxFrame.header, hcan2RxFrame.data);
+		HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO1, &hcan2RxFrame.header, hcan2RxFrame.data);
 		//在下面进行解码begin
 
 

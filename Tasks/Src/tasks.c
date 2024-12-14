@@ -64,7 +64,7 @@ void Sendmessage(void *argument)
   {
    Cmd_gamble2006_currnt();
    Cmd_gamble3508_currnt();
-  //  Down_SendMEG();
+   Down_SendMEG();
     
     
     ctrl_position_damiao_motor(0x01,YAW_D4310_positiontarget);
@@ -143,5 +143,5 @@ void Down_SendMEG()
   down_MEG[1]=SBUS.Ch4;
   down_MEG[2]=SBUS.Ch1;
   down_MEG[3]=SBUS.SA;
-  CAN_SendData(1,0x123,down_MEG);
+  CAN_SendData(2,0x123,down_MEG);
 } 
