@@ -12,11 +12,13 @@ void StartTask02(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
+  INS_Init();
 
   for(;;)
   {
 
     /*imu解算开始*/
+    INS_Task();
 
     /*imu解算结束*/
 
