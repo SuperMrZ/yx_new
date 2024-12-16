@@ -112,8 +112,8 @@ void remoteDecode()
         /*推杆状态判定开始*/
         if(SBUS.SG == 353 && back_flag ==1)
         {
-            pushrot_M2006_speedTarget =-2000;
-            if( M2006Pushrop.given_current <-6500)
+            pushrot_M2006_speedTarget =-4000;
+            if( M2006Pushrop.given_current <-6500)//调试时为12000，上车时为6500
             {
                 back_flag = 0;
 
@@ -129,16 +129,16 @@ void remoteDecode()
 
         if(SBUS.SG == 1024 && SBUS.SG_last ==353)
         {
-            pushrot_M2006_positionTarget +=8192*60;
+            pushrot_M2006_positionTarget = M2006Pushrop.ecd + 8192*100;
             back_flag = 1;
         }
         if(SBUS.SG == 1695 && SBUS.SG_last ==1024)
         {
-            pushrot_M2006_positionTarget +=8192*50;
+            pushrot_M2006_positionTarget +=8192*20;
         }
         if(SBUS.SG == 1024 && SBUS.SG_last ==1695)
         {
-            pushrot_M2006_positionTarget -=8192*50;
+            pushrot_M2006_positionTarget -=8192*20;
         }              
         /*推杆状态判断结束*/
 

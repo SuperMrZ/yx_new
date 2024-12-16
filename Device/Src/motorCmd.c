@@ -93,6 +93,8 @@ void cmd_M2006pushrop_speed(int16_t target)
     	
         motor_currnt = pid_output(&pid_M2006Pushrop_speed,M2006Pushrop.speed_rpm,target);
 
+        
+
         M2006Pushrop_currnt = motor_currnt;
     
     

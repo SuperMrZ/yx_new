@@ -76,19 +76,6 @@ void Sendmessage(void *argument)
 }
 
 
-void StartINSTask(void *argument)
-{
-  /* USER CODE BEGIN StartINSTask */
-   INS_Init();
-  /* Infinite loop */
-  for(;;)
-  {
-    int16_t a;
-    //INS_Task();
-    osDelay(1);
-  }
-  /* USER CODE END StartINSTask */
-}
 
 void M3508Load_Move()
 {
@@ -113,7 +100,7 @@ void M2006PushRop_Move()
 {
   if(pushrot_M2006_positionTarget > 8192)
   {
-    cmd_M2006pushrop_speed(2000);
+    cmd_M2006pushrop_speed(4000);
     if(M2006Pushrop.last_ecd-M2006Pushrop.ecd>4096)
     {
       pushrot_M2006_positionTarget -= 8192;
@@ -122,7 +109,7 @@ void M2006PushRop_Move()
   }
   if(pushrot_M2006_positionTarget < 0)
   {
-    cmd_M2006pushrop_speed(-2000);
+    cmd_M2006pushrop_speed(-4000);
     if(M2006Pushrop.ecd - M2006Pushrop.last_ecd>4096)
     {
       pushrot_M2006_positionTarget += 8192;

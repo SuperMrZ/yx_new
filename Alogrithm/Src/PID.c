@@ -21,10 +21,10 @@ PID pid_M3508Laod_angle=
 {1,0,3,0x1000,0x5000,0,0,0,0,0,0};
 
 PID pid_M2006Pushrop_speed=
-{3,0.1,0,0x1000,0x5000,0,0,0,0,0,0};
+{2,0,0,0x1000,0x5000,0,0,0,0,0,0};
 
 PID pid_M2006Pushrop_angle=
-{0.5,0,4,0x1000,0x5000,0,0,0,0,0,0};
+{1,0,2,0x1000,0x5000,0,0,0,0,0,0};
 
 PID pid_M6020Yaw_speed=
 {8,0,2,0x1000,0x3000,0,0,0,0,0,0};
@@ -76,7 +76,8 @@ float pid_output(PID *pid, float feedback, float target)
         pid->output = pid->maxO;
     }
 
+
+
     return pid->output;
 }
-
 
