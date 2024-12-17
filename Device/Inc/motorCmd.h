@@ -1,6 +1,7 @@
 #include "main.h"
 #include "bsp_can.h"
 #include "PID.h"
+#include "bsp_uart.h"
 #ifndef _MOTOR_CMD_H
 #define _MOTOR_CMD_H
 

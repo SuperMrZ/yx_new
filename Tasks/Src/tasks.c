@@ -6,6 +6,7 @@
 void M3508Load_Move();
 
 extern SBUS_Buffer SBUS;
+extern INS_t INS;
 
 /*第一个任务，用于计算数据*/
 void StartTask02(void *argument)
@@ -45,7 +46,10 @@ void StartTask02(void *argument)
 
       cmd_M3508Friction_speed(M3508Friction_speedTarget);
 
-      cmd_M6020Yaw_angle(Yaw6020_positiontarget);
+       cmd_M6020Yaw_angle(Yaw6020_positiontarget);
+      // cmd_M6020Yaw_speed(SBUS.Ch1-1024);
+
+
     }
 
    /*电机电流控制计算结束*/
@@ -65,12 +69,12 @@ void Sendmessage(void *argument)
    Cmd_gamble2006_currnt();
    Cmd_gamble3508_currnt();
    Down_SendMEG();
+   Down_SendMEG2();
+    
+   ctrl_position_damiao_motor(0x01,YAW_D4310_positiontarget);
     
     
-    ctrl_position_damiao_motor(0x01,YAW_D4310_positiontarget);
-    
-    osDelay(1);
-    Cmd_gamble6020_currnt();
+   Cmd_gamble6020_currnt();
     osDelay(1);
   }
 }
@@ -132,3 +136,13 @@ void Down_SendMEG()
   down_MEG[3]=SBUS.SA;
   CAN_SendData(2,0x123,down_MEG);
 } 
+
+void Down_SendMEG2()
+{
+  uint32_t temp = *(uint32_t*)&INS.Yaw;
+  down_MEG[0] = (uint16_t)(temp >> 16);  // 获取高16位
+  down_MEG[1] = (uint16_t)(temp & 0xFFFF);  // 获取低16位
+  down_MEG[2]=SBUS.SF;
+  down_MEG[3]=SBUS.SA;
+  CAN_SendData(2,0x124,down_MEG);
+}

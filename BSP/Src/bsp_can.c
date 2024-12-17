@@ -66,7 +66,7 @@ void BspCan2Init() {
     filter.FilterIdLow = 0x0000;
     filter.FilterMaskIdHigh = 0x0000;
     filter.FilterMaskIdLow = 0x0000;
-    filter.FilterFIFOAssignment = CAN_FILTER_FIFO1;//FIFO0
+    filter.FilterFIFOAssignment = CAN_FILTER_FIFO1;//FIFO1
     filter.SlaveStartFilterBank = 14; 
     filter.FilterActivation = ENABLE;
     if (HAL_CAN_ConfigFilter(&hcan2, &filter) != HAL_OK) {
@@ -161,6 +161,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 		//在下面进行解码begin
 
 
+
         //解码end
 	}
 }
@@ -181,6 +182,32 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan)
 
 		HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO1, &hcan2RxFrame.header, hcan2RxFrame.data);
 		//在下面进行解码begin
+                switch (hcan2RxFrame.header.StdId)
+        {
+        case 0x204:
+        {
+            M3508Load.ecd=(hcan2RxFrame.data[0]<<8)|hcan2RxFrame.data[1];//转子机械角度
+		    M3508Load.speed_rpm=(hcan2RxFrame.data[2]<<8)|hcan2RxFrame.data[3];//转子转速
+	    	M3508Load.given_current=(hcan2RxFrame.data[4]<<8)|hcan2RxFrame.data[5];//实际转矩电流
+		    M3508Load.temperate=hcan2RxFrame.data[6];//电机温度 
+        }
+            break;
+
+        case 0x20A:
+        {
+            M6020Yaw.ecd=(hcan2RxFrame.data[0]<<8)|hcan2RxFrame.data[1];//转子机械角度
+		    M6020Yaw.speed_rpm=(hcan2RxFrame.data[2]<<8)|hcan2RxFrame.data[3];//转子转速
+	    	M6020Yaw.given_current=(hcan2RxFrame.data[4]<<8)|hcan2RxFrame.data[5];//实际转矩电流
+		    M6020Yaw.temperate=hcan2RxFrame.data[6];//电机温度
+
+        }
+            break;
+
+
+
+        default:
+            break;
+        }
 
 
         //解码end

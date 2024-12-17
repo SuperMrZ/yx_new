@@ -11,7 +11,7 @@ extern damiao_recieve damiao_recieve_pitch;
 int32_t pushrot_M2006_positionTarget;
 int16_t pushrot_M2006_speedTarget;
 int16_t M3508Friction_speedTarget[3];
-int32_t Load_M3508_positionTarget;
+float Load_M3508_positionTarget;
 int16_t Load_M3508_speedTarget;
 float YAW_D4310_positiontarget;
 int16_t YawPitch6020_speedtarget;
@@ -86,13 +86,13 @@ void remoteDecode()
         YAW_D4310_positiontarget = YAW_D4310_positiontarget + (float)(SBUS.Ch2-1024)*0.00005;
         Yaw6020_positiontarget = Yaw6020_positiontarget + (float)(SBUS.Ch1-1024)*0.5;
 
-        if(YAW_D4310_positiontarget >11)
+        if(YAW_D4310_positiontarget >-0.910)
         {
-            YAW_D4310_positiontarget=11;
+            YAW_D4310_positiontarget= -0.910;
         }
-        if(YAW_D4310_positiontarget<-11)
+        if(YAW_D4310_positiontarget<-1.85)
         {
-            YAW_D4310_positiontarget=-11;
+            YAW_D4310_positiontarget=-1.85;
         }
 
         if(Yaw6020_positiontarget > 8191)
@@ -106,7 +106,7 @@ void remoteDecode()
 
         if(SBUS.SH == 1695 && SBUS.SH_last == 353 && gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)
         {
-            Load_M3508_positionTarget += 8192*10;
+            Load_M3508_positionTarget += 8192*2.82 + ( M3508Load.ecd );
         }
 
         /*推杆状态判定开始*/
@@ -129,7 +129,7 @@ void remoteDecode()
 
         if(SBUS.SG == 1024 && SBUS.SG_last ==353)
         {
-            pushrot_M2006_positionTarget = M2006Pushrop.ecd + 8192*100;
+            pushrot_M2006_positionTarget = M2006Pushrop.ecd + 8192*98;
             back_flag = 1;
         }
         if(SBUS.SG == 1695 && SBUS.SG_last ==1024)
@@ -151,9 +151,9 @@ void remoteDecode()
 
         if (SBUS.SE == 1024)
         {
-            M3508Friction_speedTarget[0]=8000;
-            M3508Friction_speedTarget[1]=-8000;
-            M3508Friction_speedTarget[2]=8000;
+            M3508Friction_speedTarget[0]=6500;
+            M3508Friction_speedTarget[1]=-6500;
+            M3508Friction_speedTarget[2]=6500;
         }
 
     }

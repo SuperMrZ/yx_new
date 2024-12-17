@@ -4,7 +4,7 @@
 #include "main.h"
 #include "bsp_uart.h"
 #include "motorCmd.h"
-
+#include "ins_task.h"
 
 
 
