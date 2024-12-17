@@ -1,7 +1,7 @@
 #include "tasks.h"
 
  int16_t down_MEG[4];
-
+uint16_t down_MEG2[4];
 
 void M3508Load_Move();
 
@@ -137,12 +137,20 @@ void Down_SendMEG()
   CAN_SendData(2,0x123,down_MEG);
 } 
 
+
+uint32_t temp;
+
+
 void Down_SendMEG2()
 {
-  uint32_t temp = *(uint32_t*)&INS.Yaw;
-  down_MEG[0] = (uint16_t)(temp >> 16);  // 获取高16位
-  down_MEG[1] = (uint16_t)(temp & 0xFFFF);  // 获取低16位
-  down_MEG[2]=SBUS.SF;
-  down_MEG[3]=SBUS.SA;
-  CAN_SendData(2,0x124,down_MEG);
+   temp = *(uint32_t*)&INS.Yaw;
+
+  //  temp = &INS.Yaw;
+  down_MEG2[0] = (uint16_t)(temp >> 16);  // 获取高16位
+  down_MEG2[1] = (uint16_t)(temp & 0xFFFF);  // 获取低16位
+  down_MEG2[2] = 0;
+  down_MEG2[3] = 0;
+  
+  CAN_SendData(2,0x124,down_MEG2);
+
 }
