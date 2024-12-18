@@ -84,7 +84,7 @@ void remoteDecode()
     {
         enable_damiao_motor(0x01);
         YAW_D4310_positiontarget = YAW_D4310_positiontarget + (float)(SBUS.Ch2-1024)*0.00005;
-        Yaw6020_positiontarget = Yaw6020_positiontarget + (float)(SBUS.Ch1-1024)*0.5;
+        Yaw6020_positiontarget = Yaw6020_positiontarget - (float)(SBUS.Ch1-1024)*0.1;
 
         if(YAW_D4310_positiontarget >-0.910)
         {
@@ -113,7 +113,7 @@ void remoteDecode()
         if(SBUS.SG == 353 && back_flag ==1)
         {
             pushrot_M2006_speedTarget =-4000;
-            if( M2006Pushrop.given_current <-6500)//调试时为12000，上车时为6500
+            if( M2006Pushrop.given_current <-5500)//调试时为12000，上车时为5500
             {
                 back_flag = 0;
 

@@ -128,7 +128,7 @@ void cmd_M6020Yaw_speed(int16_t target)
 {
     int32_t motor_currnt;
 	
-        motor_currnt = pid_output(&pid_M6020Yaw_speed,M6020Yaw.speed_rpm,target); 
+        motor_currnt = target*2 + pid_output(&pid_M6020Yaw_speed,M6020Yaw.speed_rpm,target); 
         // if (motor_currnt>20000)
         // {
         //     motor_currnt =20000;
@@ -160,7 +160,7 @@ void cmd_M6020Yaw_angle(int16_t target)
         {
             cur =cur-8192;
         }
-        speed =  (SBUS.Ch1-1024)*1.0f + pid_output(&pid_M6020Yaw_angle,cur,target); 
+        speed =  (SBUS.Ch1-1024)*0.1f + pid_output(&pid_M6020Yaw_angle,cur,target); 
     
     cmd_M6020Yaw_speed(speed);
 

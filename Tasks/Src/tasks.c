@@ -43,10 +43,13 @@ void StartTask02(void *argument)
       }
       
       M3508Load_Move();
+      //  cmd_M3508Laod_speed(5*(SBUS.Ch1 - 1024));
+
+
 
       cmd_M3508Friction_speed(M3508Friction_speedTarget);
 
-       cmd_M6020Yaw_angle(Yaw6020_positiontarget);
+        cmd_M6020Yaw_angle(Yaw6020_positiontarget);
       // cmd_M6020Yaw_speed(SBUS.Ch1-1024);
 
 
@@ -74,7 +77,7 @@ void Sendmessage(void *argument)
    ctrl_position_damiao_motor(0x01,YAW_D4310_positiontarget);
     
     
-   Cmd_gamble6020_currnt();
+    Cmd_gamble6020_currnt();
     osDelay(1);
   }
 }
@@ -85,7 +88,7 @@ void M3508Load_Move()
 {
   if(Load_M3508_positionTarget>8192)
   {
-    cmd_M3508Laod_speed(500);
+    cmd_M3508Laod_speed(1000);
     if(M3508Load.last_ecd-M3508Load.ecd > 4096)
     {
       Load_M3508_positionTarget=Load_M3508_positionTarget-8192;

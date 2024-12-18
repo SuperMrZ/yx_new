@@ -12,6 +12,7 @@ float ki;
 float kd;
 float maxI;  //maxI积分限幅
 float maxO;  //maxO输出限幅
+float error_now_max; //积分分离点
 float error_now;
 float error_last;
 float pout ;
