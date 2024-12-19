@@ -76,6 +76,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Alogrithm/Src/QuaternionEKF.c
     Alogrithm/Src/transfer.c
     Alogrithm/Src/user_lib.c
+    Alogrithm/Src/crc.c
+
     BSP/Src/bsp_dwt.c
     BSP/Src/bsp_PWM.c
     BSP/Src/bsp_rc.c
