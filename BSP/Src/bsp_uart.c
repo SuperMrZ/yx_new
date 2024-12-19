@@ -5,7 +5,7 @@ gambleState gamble_state;
 extern SBUS_Buffer SBUS;
 extern uint8_t SBUS_RXBuffer[25];//声明遥控器接收缓存数组
 extern damiao_recieve damiao_recieve_pitch;
-
+extern  ReceivePacket Up_ReceivePacket; 
 
 
 int32_t pushrot_M2006_positionTarget;
@@ -83,8 +83,10 @@ void remoteDecode()
     if(SBUS.SF == 1695)
     {
         enable_damiao_motor(0x01);
-        YAW_D4310_positiontarget = YAW_D4310_positiontarget + (float)(SBUS.Ch2-1024)*0.00005;
-        Yaw6020_positiontarget = Yaw6020_positiontarget - (float)(SBUS.Ch1-1024)*0.1;
+        // YAW_D4310_positiontarget = YAW_D4310_positiontarget + (float)(SBUS.Ch2-1024)*0.00005;
+        // Yaw6020_positiontarget = Yaw6020_positiontarget - (float)(SBUS.Ch1-1024)*0.1;
+        YAW_D4310_positiontarget = damiao_recieve_pitch.position + Up_ReceivePacket.pitch_angle;
+        Yaw6020_positiontarget = M6020Yaw.ecd + 8192*Up_ReceivePacket.yaw_angle/6.28;
 
         if(YAW_D4310_positiontarget >-0.910)
         {

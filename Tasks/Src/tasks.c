@@ -11,26 +11,9 @@ extern INS_t INS;
 
 
 
+int16_t jishu;
 
 
-typedef struct
-{
-    uint8_t detect_color:1;
-    bool reset_tracker:1;
-    uint8_t mode:3;
-    uint8_t reserved:3;
-}SendPacket __attribute__((packed));
-
-typedef struct  
-{
-    bool is_tracking;          // 是否识别到目标
-    bool can_shoot;           // 是否可以开火
-    uint8_t armor_id;         // 装甲板ID
-    uint8_t bullet_freq;      // 射频
-    float pitch_angle;        // pitch角度
-    float yaw_angle;          // yaw角度
-    bool data_valid;          // 数据是否有效
-}ReceivePacket ;
 
 SendPacket Up_SendPacket;
 
@@ -100,13 +83,18 @@ void Sendmessage(void *argument)
    Cmd_gamble3508_currnt();
    Down_SendMEG();
    Down_SendMEG2();
-   up_send();
+
+    jishu ++;
+  //  ctrl_position_damiao_motor(0x01,YAW_D4310_positiontarget);
+    if(jishu >10)
+    {
+      up_send();
+      jishu =0;
+
+    }
     
-   ctrl_position_damiao_motor(0x01,YAW_D4310_positiontarget);
-    
-    
-    Cmd_gamble6020_currnt();
-    osDelay(10);
+  //   Cmd_gamble6020_currnt();
+    osDelay(1);
   }
 }
 
@@ -244,9 +232,9 @@ a2.reset_tracker =0 ;
 
 up_send_data[0] = 0x5A;
 
-float data1 =INS.Pitch;
+float data1 =(-INS.Pitch);
 
-float data2 =INS.Yaw;
+float data2 =INS.Yaw*0.01745329;
 
 float data3 = 0.0f;
 int8_t data4 = 0;
