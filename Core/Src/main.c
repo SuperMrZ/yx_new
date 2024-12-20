@@ -123,7 +123,7 @@ int main(void)
   MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
   DWT_Init(168);
-   while (BMI088_init(&hspi1, 1) != BMI088_NO_ERROR);
+   while (BMI088_init(&hspi1, 0) != BMI088_NO_ERROR);
 
   
   HAL_UARTEx_ReceiveToIdle_DMA(&huart3,SBUS_RXBuffer,25);
@@ -148,7 +148,7 @@ int main(void)
   pushrot_M2006_positionTarget = M2006Pushrop.ecd;
   Load_M3508_positionTarget = M3508Load.ecd;
   pushrot_M2006_positionTarget=M2006Pushrop.ecd;
-  YAW_D4310_positiontarget  = damiao_recieve_pitch.position;
+  YAW_D4310_positiontarget  = INS.Pitch;
   Yaw6020_positiontarget    = M6020Yaw.ecd;
   gamble_state.bullet = 1;
   gamble_state.pushrot_position = 2;

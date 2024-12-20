@@ -1,11 +1,12 @@
 #include "bsp_uart.h"
-
+#include "ins_task.h"
 gambleState gamble_state;
 
 extern SBUS_Buffer SBUS;
 extern uint8_t SBUS_RXBuffer[25];//声明遥控器接收缓存数组
 extern damiao_recieve damiao_recieve_pitch;
 extern  ReceivePacket Up_ReceivePacket; 
+extern INS_t INS;
 
 
 int32_t pushrot_M2006_positionTarget;
@@ -82,20 +83,36 @@ void remoteDecode()
     }
     if(SBUS.SF == 1695)
     {
+        
         enable_damiao_motor(0x01);
-        // YAW_D4310_positiontarget = YAW_D4310_positiontarget + (float)(SBUS.Ch2-1024)*0.00005;
-        // Yaw6020_positiontarget = Yaw6020_positiontarget - (float)(SBUS.Ch1-1024)*0.1;
-        YAW_D4310_positiontarget = damiao_recieve_pitch.position + Up_ReceivePacket.pitch_angle;
-        Yaw6020_positiontarget = M6020Yaw.ecd + 8192*Up_ReceivePacket.yaw_angle/6.28;
 
-        if(YAW_D4310_positiontarget >-0.910)
+        // if(SBUS.SA ==353)
+        // {
+        //      YAW_D4310_positiontarget = YAW_D4310_positiontarget - (float)(SBUS.Ch2-1024)*0.00005;
+        // }
+        // else if(SBUS.SA ==1024)
+        // {
+        //     YAW_D4310_positiontarget = Up_ReceivePacket.pitch_angle;
+        // }
+        // Yaw6020_positiontarget = Yaw6020_positiontarget - (float)(SBUS.Ch1-1024)*0.1;
+        // YAW_D4310_positiontarget = YAW_D4310_positiontarget ;
+        // Yaw6020_positiontarget = M6020Yaw.ecd + 8192*Up_ReceivePacket.yaw_angle/6.28;
+
+        YAW_D4310_positiontarget = YAW_D4310_positiontarget-(SBUS.Ch2-1024)*0.003;
+        
+
+        if(YAW_D4310_positiontarget >40)
         {
-            YAW_D4310_positiontarget= -0.910;
+            YAW_D4310_positiontarget = 40;
         }
-        if(YAW_D4310_positiontarget<-1.85)
+
+        if(YAW_D4310_positiontarget < -4)
         {
-            YAW_D4310_positiontarget=-1.85;
+            YAW_D4310_positiontarget = -4;
         }
+
+   
+
 
         if(Yaw6020_positiontarget > 8191)
         {

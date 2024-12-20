@@ -1,9 +1,11 @@
 #include "damiao.h"
+#include <ins_task.h>
 
 
 int16_t D4310Pitch_currnt[4];
 extern  damiao_recieve damiao_recieve_pitch;
 extern SBUS_Buffer SBUS;
+extern INS_t INS;
 float	uint_to_float(uint16_t x_int, float x_min, float x_max, int bits){
     /// converts unsigned int to float, given range and number of bits ///
   
@@ -148,8 +150,9 @@ void ctrl_speed_damiao_motor( uint16_t id, float speed)
 void ctrl_position_damiao_motor( uint16_t id, float position)
 {
   float speed;
-  speed = (SBUS.Ch2-1024)*0.005f + pid_output(&pid_D4310Pitch_angle,damiao_recieve_pitch.position,position);
-  ctrl_speed_damiao_motor(id,speed);
+  // speed = (SBUS.Ch2-1024)*0.005f + pid_output(&pid_D4310Pitch_angle,damiao_recieve_pitch.position,position);
+  speed =   pid_output(&pid_D4310Pitch_angle,INS.Pitch,position);
+  ctrl_speed_damiao_motor(id,-speed);
 
 
 
