@@ -85,7 +85,9 @@ void Sendmessage(void *argument)
    Down_SendMEG2();
 
     jishu ++;
-  //  ctrl_position_damiao_motor(0x01,YAW_D4310_positiontarget);
+   ctrl_position_damiao_motor(0x01,YAW_D4310_positiontarget);
+    // ctrl_speed_damiao_motor(0x01,(SBUS.Ch2-1024)*0.005);
+
     if(jishu >10)
     {
       up_send();
@@ -232,7 +234,7 @@ a2.reset_tracker =0 ;
 
 up_send_data[0] = 0x5A;
 
-float data1 =(-INS.Pitch);
+float data1 =(INS.Pitch)*0.01745329;
 
 float data2 =INS.Yaw*0.01745329;
 
