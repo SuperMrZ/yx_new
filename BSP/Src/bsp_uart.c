@@ -65,6 +65,7 @@ void remoteDecode()
     SBUS.SE = SBUS.Ch8;
     SBUS.SG = SBUS.Ch9;
     SBUS.SA = SBUS.Ch10;
+    SBUS.SB = SBUS.Ch11;
 
     
 
@@ -86,20 +87,32 @@ void remoteDecode()
         
         enable_damiao_motor(0x01);
 
-        // if(SBUS.SA ==353)
-        // {
-        //      YAW_D4310_positiontarget = YAW_D4310_positiontarget - (float)(SBUS.Ch2-1024)*0.00005;
-        // }
-        // else if(SBUS.SA ==1024)
-        // {
-        //     YAW_D4310_positiontarget = Up_ReceivePacket.pitch_angle;
-        // }
+        if(SBUS.SB == 353)
+        {
+            YAW_D4310_positiontarget = YAW_D4310_positiontarget-(SBUS.Ch2-1024)*0.004;
+            Yaw6020_positiontarget = Yaw6020_positiontarget - (float)(SBUS.Ch1-1024)*0.0045;
+        }
+        if(SBUS.SB == 1024)
+        {
+
+            YAW_D4310_positiontarget = - Up_ReceivePacket.pitch_angle*57.29578;
+            if(Up_ReceivePacket.yaw_angle<1 && Up_ReceivePacket.yaw_angle>-1)
+            {
+                Yaw6020_positiontarget = Up_ReceivePacket.yaw_angle*57.29578;
+            }
+            else
+            {
+                Yaw6020_positiontarget =Yaw6020_positiontarget;
+            }
+            
+
+        }
         // Yaw6020_positiontarget = Yaw6020_positiontarget - (float)(SBUS.Ch1-1024)*0.1;
         // YAW_D4310_positiontarget = YAW_D4310_positiontarget ;
         // Yaw6020_positiontarget = M6020Yaw.ecd + 8192*Up_ReceivePacket.yaw_angle/6.28;
 
-        YAW_D4310_positiontarget = YAW_D4310_positiontarget-(SBUS.Ch2-1024)*0.003;
-        
+        // YAW_D4310_positiontarget = YAW_D4310_positiontarget-(SBUS.Ch2-1024)*0.004;
+        // Yaw6020_positiontarget = Yaw6020_positiontarget - (float)(SBUS.Ch1-1024)*0.006;
 
         if(YAW_D4310_positiontarget >40)
         {
@@ -114,13 +127,13 @@ void remoteDecode()
    
 
 
-        if(Yaw6020_positiontarget > 8191)
+        if(Yaw6020_positiontarget > 179.5)
         {
-            Yaw6020_positiontarget =1;
+            Yaw6020_positiontarget =-179.5;
         }
-         if(Yaw6020_positiontarget <1)
+         if(Yaw6020_positiontarget <-179.5)
         {
-            Yaw6020_positiontarget =8191;
+            Yaw6020_positiontarget =179.5;
         }
 
         if(SBUS.SH == 1695 && SBUS.SH_last == 353 && gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)

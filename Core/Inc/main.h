@@ -116,6 +116,8 @@ typedef struct{//25ֽSBUS洢ṹ
 	uint16_t SG_last;
 	uint16_t SA;
 	uint16_t SA_last;
+	uint16_t SB;
+	uint16_t SB_last;
 
 
 }SBUS_Buffer;

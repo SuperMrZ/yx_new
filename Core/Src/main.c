@@ -149,7 +149,7 @@ int main(void)
   Load_M3508_positionTarget = M3508Load.ecd;
   pushrot_M2006_positionTarget=M2006Pushrop.ecd;
   YAW_D4310_positiontarget  = INS.Pitch;
-  Yaw6020_positiontarget    = M6020Yaw.ecd;
+  Yaw6020_positiontarget    = INS.Yaw;
   gamble_state.bullet = 1;
   gamble_state.pushrot_position = 2;
   

@@ -88,14 +88,14 @@ void Sendmessage(void *argument)
    ctrl_position_damiao_motor(0x01,YAW_D4310_positiontarget);
     // ctrl_speed_damiao_motor(0x01,(SBUS.Ch2-1024)*0.005);
 
-    if(jishu >10)
+    if(jishu >20)
     {
       up_send();
       jishu =0;
 
     }
     
-  //   Cmd_gamble6020_currnt();
+     Cmd_gamble6020_currnt();
     osDelay(1);
   }
 }
@@ -192,10 +192,10 @@ void up_receive(uint8_t* Buf, uint32_t *Len)
     //     return;  // CRC校验失败
     // }
 
-    // // 检查包头
-    // if (Buf[0] != 0xA5) {
-    //     return;  // 包头错误
-    // }
+    // 检查包头
+    if (Buf[0] != 0xA5) {
+        return;  // 包头错误
+    }
 
     // 解析第二个字节中的bit位
     uint8_t status_byte = Buf[1];

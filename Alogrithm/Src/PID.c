@@ -27,16 +27,16 @@ PID pid_M2006Pushrop_angle=
 {1,0,2,0x1000,0x5000,0x3000,0,0,0,0,0,0};
 
 PID pid_M6020Yaw_speed=
-{8,0.2,5,1500,0x3000,0x3000,0,0,0,0,0,0};
+{20,0,0,1500,0x3000,0x3000,0,0,0,0,0,0};
 
 PID pid_M6020Yaw_angle=
-{3,0,10,0x1000,800,0x3000,0,0,0,0,0,0};
+{40,0.01,400,200,800,0x3000,5,0,0,0,0,0};
 
 PID pid_D4310Pitch_speed=
 {1,0,0,0x1000,0x3000,0x3000,0,0,0,0,0,0};
 
 PID pid_D4310Pitch_angle=
-{0.3,0.003,5,500,1000,5,0,0,0,0,0,0};
+{0.3,0.0003,0,500,1000,5,0,0,0,0,0,0};
 
 
 
@@ -121,7 +121,7 @@ float pid_output(PID *pid, float feedback, float target)
 
     // 计算D部分
     float dout = pid->kd * (pid->error_now - pid->error_last);
-	pid->dout = dout;
+	pid->dout =  (pid->dout)*0.5 + dout*0.5;
 
     // 计算输出并限制
     pid->output = pout + dout + (index * pid->iout);
