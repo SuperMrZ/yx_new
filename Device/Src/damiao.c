@@ -147,11 +147,15 @@ void ctrl_speed_damiao_motor( uint16_t id, float speed)
   ctrl_torq_damiao_motor(id,torq);
 } 
 
+float *damiao_position;
+
 void ctrl_position_damiao_motor( uint16_t id, float position)
 {
   float speed;
+  
   // speed = (SBUS.Ch2-1024)*0.005f + pid_output(&pid_D4310Pitch_angle,damiao_recieve_pitch.position,position);
-  speed =   pid_output(&pid_D4310Pitch_angle,INS.Pitch,position);
+  speed =  (position - *damiao_position)*0.02f + pid_output(&pid_D4310Pitch_angle,INS.Pitch,position);
+  *damiao_position = position;
   ctrl_speed_damiao_motor(id,-speed);
 
 

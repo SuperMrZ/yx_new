@@ -79,6 +79,9 @@ void remoteDecode()
         M3508Load_currnt       =0;
         M2006Pushrop_currnt    =0;
         M6020Yaw_currrnt       =0;
+        YAW_D4310_positiontarget =INS.Pitch;
+        Yaw6020_positiontarget   =INS.Yaw;
+        Load_M3508_positionTarget=M3508Load.ecd;
 
 
     }
@@ -94,16 +97,25 @@ void remoteDecode()
         }
         if(SBUS.SB == 1024)
         {
+            if(Up_ReceivePacket.yaw_angle == 0 && Up_ReceivePacket.pitch_angle ==0)//未收到视觉数据
+            {
+                YAW_D4310_positiontarget =YAW_D4310_positiontarget;
+                Yaw6020_positiontarget  =Yaw6020_positiontarget;
+            }
+            else{
+                 YAW_D4310_positiontarget = - Up_ReceivePacket.pitch_angle*57.29578;
+                if(Up_ReceivePacket.yaw_angle<1 && Up_ReceivePacket.yaw_angle>-1)
+                {
+                    Yaw6020_positiontarget = Up_ReceivePacket.yaw_angle*57.29578;
+                }
+                else
+                {
+                   Yaw6020_positiontarget =Yaw6020_positiontarget;
+                }
 
-            YAW_D4310_positiontarget = - Up_ReceivePacket.pitch_angle*57.29578;
-            if(Up_ReceivePacket.yaw_angle<1 && Up_ReceivePacket.yaw_angle>-1)
-            {
-                Yaw6020_positiontarget = Up_ReceivePacket.yaw_angle*57.29578;
             }
-            else
-            {
-                Yaw6020_positiontarget =Yaw6020_positiontarget;
-            }
+
+           
             
 
         }
