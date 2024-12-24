@@ -173,12 +173,12 @@ void remoteDecode()
 
         if(SBUS.SG == 1024 && SBUS.SG_last ==353)
         {
-            pushrot_M2006_positionTarget = M2006Pushrop.ecd + 8192*98;
+            pushrot_M2006_positionTarget = M2006Pushrop.ecd + 8192*75;
             back_flag = 1;
         }
         if(SBUS.SG == 1695 && SBUS.SG_last ==1024)
         {
-            pushrot_M2006_positionTarget +=8192*20;
+            pushrot_M2006_positionTarget +=8192*10;
         }
         if(SBUS.SG == 1024 && SBUS.SG_last ==1695)
         {
@@ -195,9 +195,9 @@ void remoteDecode()
 
         if (SBUS.SE == 1024)
         {
-            M3508Friction_speedTarget[0]=6500;
-            M3508Friction_speedTarget[1]=-6500;
-            M3508Friction_speedTarget[2]=6500;
+            M3508Friction_speedTarget[0]=6000;
+            M3508Friction_speedTarget[1]=-6000;
+            M3508Friction_speedTarget[2]=6000;
         }
 
     }

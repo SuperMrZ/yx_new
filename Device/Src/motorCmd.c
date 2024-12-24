@@ -161,6 +161,7 @@ void cmd_M6020Yaw_angle(int16_t target)
             cur =cur-360;
         }
         speed =  pid_output(&pid_M6020Yaw_angle,cur,target); 
+        // speed = pidOutputDiffFirst(&pid_DiffFirst_M6020Yaw_angle,cur,target);
     
     cmd_M6020Yaw_speed(speed);
 
