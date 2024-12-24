@@ -62,9 +62,9 @@ void remoteDecode()
     SBUS.End  = SBUS_RXBuffer[24];
     SBUS.SF = SBUS.Ch6;
     SBUS.SH = SBUS.Ch7;
-    SBUS.SE = SBUS.Ch8;
+    SBUS.SE = SBUS.Ch10;
     SBUS.SG = SBUS.Ch9;
-    SBUS.SA = SBUS.Ch10;
+    SBUS.SA = SBUS.Ch8;
     SBUS.SB = SBUS.Ch11;
 
     

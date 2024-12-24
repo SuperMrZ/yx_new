@@ -123,7 +123,7 @@ int main(void)
   MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
   DWT_Init(168);
-   while (BMI088_init(&hspi1, 0) != BMI088_NO_ERROR);
+   while (BMI088_init(&hspi1, 1) != BMI088_NO_ERROR);
 
   
   HAL_UARTEx_ReceiveToIdle_DMA(&huart3,SBUS_RXBuffer,25);

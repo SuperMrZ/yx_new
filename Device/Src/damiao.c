@@ -116,10 +116,10 @@ void ctrl_torq_damiao_motor( uint16_t id, float _torq)
 
     // 数据归一化并转换为无符号整型
     pos_tmp = float_to_uint(0, -12.5, 12.5, 16);//注意所有调用的float_to_uint函数后三个参数均由调参软件上读出
-    vel_tmp = float_to_uint(0, -30, 30, 12);    //如果更改会导致最后的解码错误
+    vel_tmp = float_to_uint(0, -45, 45, 12);    //如果更改会导致最后的解码错误
     kp_tmp = float_to_uint(0, 0, 500, 12);
     kd_tmp = float_to_uint(0, 0, 5, 12);
-    tor_tmp = float_to_uint(_torq, -10, 10, 12);
+    tor_tmp = float_to_uint(_torq, -18, 18, 12);
 
     // CAN 数据帧配置
 		uint32_t send_mail_box;
