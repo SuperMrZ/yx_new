@@ -59,7 +59,7 @@ extern gambleState gamble_state;
 
 
 
-  int16_t target[4]={0,100,100,100};
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -124,7 +124,7 @@ int main(void)
   MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
   DWT_Init(168);
-   while (BMI088_init(&hspi1, 1) != BMI088_NO_ERROR);
+   while (BMI088_init(&hspi1, 0) != BMI088_NO_ERROR);
 
   
   HAL_UARTEx_ReceiveToIdle_DMA(&huart3,SBUS_RXBuffer,25);
@@ -149,8 +149,8 @@ int main(void)
   pushrot_M2006_positionTarget = M2006Pushrop.ecd;
   Load_M3508_positionTarget = M3508Load.ecd;
   pushrot_M2006_positionTarget=M2006Pushrop.ecd;
-  YAW_D4310_positiontarget  = INS.Pitch;
-  Yaw6020_positiontarget    = INS.Yaw;
+  pitch4310_positiontarget  = INS.Pitch;
+  Yaw4310_positionTarget    = INS.Yaw;
   gamble_state.bullet = 1;
   gamble_state.pushrot_position = 2;
   
@@ -176,12 +176,12 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    target[0]= 1000*sin_signal;
+
    
     //cmd_M3508Friction_angle(target);
 
    // cmd_M3508Friction_speed(target);
-    CAN_SendData(1,0x200,target);
+  
     HAL_Delay(2);
   }
   /* USER CODE END 3 */

@@ -58,8 +58,11 @@ void StartTask02(void *argument)
 
 
       cmd_M3508Friction_speed(M3508Friction_speedTarget);
+      // ctrl_torq_damiao_motor(0x02,0.5);
+      // ctrl_speed_yaw_damiao_motor(0x02,(SBUS.Ch1-1024)*0.001);
+      ctrl_position_yaw_damiao_motor(0x02,Yaw4310_positionTarget);
 
-        cmd_M6020Yaw_angle(Yaw6020_positiontarget);
+        // cmd_M6020Yaw_angle(Yaw4310_positionTarget);
       //  cmd_M6020Yaw_speed(SBUS.Ch1-1024);
 
 
@@ -85,7 +88,7 @@ void Sendmessage(void *argument)
    Down_SendMEG2();
 
     jishu ++;
-   ctrl_position_damiao_motor(0x01,YAW_D4310_positiontarget);
+   ctrl_position_damiao_motor(0x01,pitch4310_positiontarget);
    
     // ctrl_speed_damiao_motor(0x01,(SBUS.Ch2-1024)*0.005);
 
@@ -96,7 +99,7 @@ void Sendmessage(void *argument)
 
     }
     
-     Cmd_gamble6020_currnt();
+    //  Cmd_gamble6020_currnt();
     osDelay(1);
   }
 }

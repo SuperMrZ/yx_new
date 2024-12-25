@@ -80,6 +80,7 @@ void enable_damiao_motor(uint16_t id)
     damiao_can_send_data[7] = 0xFC;
 		
 		HAL_CAN_AddTxMessage(&hcan1, &damiao_tx_message, damiao_can_send_data, &send_mail_box);
+    HAL_CAN_AddTxMessage(&hcan2, &damiao_tx_message, damiao_can_send_data, &send_mail_box);
 }
 
 void disable_damiao_motor(uint16_t id)
@@ -104,6 +105,7 @@ void disable_damiao_motor(uint16_t id)
     damiao_can_send_data[7] = 0xFD;
 		
 		HAL_CAN_AddTxMessage(&hcan1, &damiao_tx_message, damiao_can_send_data, &send_mail_box);
+    HAL_CAN_AddTxMessage(&hcan2, &damiao_tx_message, damiao_can_send_data, &send_mail_box);
 }
 
 
@@ -147,6 +149,7 @@ void ctrl_speed_damiao_motor( uint16_t id, float speed)
   ctrl_torq_damiao_motor(id,torq);
 } 
 
+
 float *damiao_position;
 
 void ctrl_position_damiao_motor( uint16_t id, float position)
@@ -158,6 +161,41 @@ void ctrl_position_damiao_motor( uint16_t id, float position)
   // *damiao_position = position;
   speed =  pid_output(&pid_D4310Pitch_angle,damiao_recieve_pitch.position,position);
   ctrl_speed_damiao_motor(id,-speed);
+
+
+
+} 
+
+
+void ctrl_speed_yaw_damiao_motor( uint16_t id, float speed)
+{
+  float torq;
+  torq = pid_output(&pid_D4310Yaw_speed,damiao_recieve_pitch.velocity,speed);
+  ctrl_torq_damiao_motor(id,torq);
+} 
+
+
+void ctrl_position_yaw_damiao_motor( uint16_t id, float position)
+{
+  float speed;
+  int16_t cur;
+  cur=INS.Yaw;
+
+        if(position-cur>180)
+        {
+            cur +=360;
+        }
+        else if(position-cur<=-180)
+        {
+            cur =cur-360;
+        }
+
+
+  // speed = (SBUS.Ch2-1024)*0.005f + pid_output(&pid_D4310Pitch_angle,damiao_recieve_pitch.position,position);
+  // speed =  (position - *damiao_position)*0.02f + pid_output(&pid_D4310Pitch_angle,INS.Pitch,position);
+  // *damiao_position = position;
+  speed =  pid_output(&pid_D4310Yaw_angle,cur,position);
+  ctrl_speed_damiao_motor(id,speed);
 
 
 

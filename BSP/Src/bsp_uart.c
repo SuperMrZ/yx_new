@@ -14,9 +14,9 @@ int16_t pushrot_M2006_speedTarget;
 int16_t M3508Friction_speedTarget[3];
 float Load_M3508_positionTarget;
 int16_t Load_M3508_speedTarget;
-float YAW_D4310_positiontarget;
+float pitch4310_positiontarget;
 int16_t YawPitch6020_speedtarget;
-float Yaw6020_positiontarget;
+float Yaw4310_positionTarget;
 
 int8_t back_flag = 1;
 
@@ -72,7 +72,6 @@ void remoteDecode()
     if(SBUS.SF ==353)//急停
     {
         disable_damiao_motor(0x01);
-        disable_damiao_motor(0x02);
         M3508Friction_currnt[0]=0;
         M3508Friction_currnt[1]=0;
         M3508Friction_currnt[2]=0;
@@ -80,9 +79,10 @@ void remoteDecode()
         M3508Load_currnt       =0;
         M2006Pushrop_currnt    =0;
         M6020Yaw_currrnt       =0;
-        YAW_D4310_positiontarget =INS.Pitch;
-        Yaw6020_positiontarget   =INS.Yaw;
+        pitch4310_positiontarget =INS.Pitch;
+        Yaw4310_positionTarget   =INS.Yaw;
         Load_M3508_positionTarget=M3508Load.ecd;
+        disable_damiao_motor(0x02);
 
 
     }
@@ -94,25 +94,25 @@ void remoteDecode()
 
         if(SBUS.SB == 353)
         {
-            YAW_D4310_positiontarget = YAW_D4310_positiontarget-(SBUS.Ch2-1024)*0.004;
-            Yaw6020_positiontarget = Yaw6020_positiontarget - (float)(SBUS.Ch1-1024)*0.0045;
+            pitch4310_positiontarget = pitch4310_positiontarget-(SBUS.Ch2-1024)*0.004;
+            Yaw4310_positionTarget = Yaw4310_positionTarget - (float)(SBUS.Ch1-1024)*0.0045;
         }
         if(SBUS.SB == 1024)
         {
             if(Up_ReceivePacket.yaw_angle == 0 && Up_ReceivePacket.pitch_angle ==0)//未收到视觉数据
             {
-                YAW_D4310_positiontarget =YAW_D4310_positiontarget;
-                Yaw6020_positiontarget  =Yaw6020_positiontarget;
+                pitch4310_positiontarget =pitch4310_positiontarget;
+                Yaw4310_positionTarget  =Yaw4310_positionTarget;
             }
             else{
-                 YAW_D4310_positiontarget = - Up_ReceivePacket.pitch_angle*57.29578;
+                 pitch4310_positiontarget = - Up_ReceivePacket.pitch_angle*57.29578;
                 if(Up_ReceivePacket.yaw_angle<1 && Up_ReceivePacket.yaw_angle>-1)
                 {
-                    Yaw6020_positiontarget = Up_ReceivePacket.yaw_angle*57.29578;
+                    Yaw4310_positionTarget = Up_ReceivePacket.yaw_angle*57.29578;
                 }
                 else
                 {
-                   Yaw6020_positiontarget =Yaw6020_positiontarget;
+                   Yaw4310_positionTarget =Yaw4310_positionTarget;
                 }
 
             }
@@ -121,33 +121,33 @@ void remoteDecode()
             
 
         }
-        // Yaw6020_positiontarget = Yaw6020_positiontarget - (float)(SBUS.Ch1-1024)*0.1;
-        // YAW_D4310_positiontarget = YAW_D4310_positiontarget ;
-        // Yaw6020_positiontarget = M6020Yaw.ecd + 8192*Up_ReceivePacket.yaw_angle/6.28;
+        // Yaw4310_positionTarget = Yaw4310_positionTarget - (float)(SBUS.Ch1-1024)*0.1;
+        // pitch4310_positiontarget = pitch4310_positiontarget ;
+        // Yaw4310_positionTarget = M6020Yaw.ecd + 8192*Up_ReceivePacket.yaw_angle/6.28;
 
-        // YAW_D4310_positiontarget = YAW_D4310_positiontarget-(SBUS.Ch2-1024)*0.004;
-        // Yaw6020_positiontarget = Yaw6020_positiontarget - (float)(SBUS.Ch1-1024)*0.006;
+        // pitch4310_positiontarget = pitch4310_positiontarget-(SBUS.Ch2-1024)*0.004;
+        // Yaw4310_positionTarget = Yaw4310_positionTarget - (float)(SBUS.Ch1-1024)*0.006;
 
-        if(YAW_D4310_positiontarget >40)
+        if(pitch4310_positiontarget >42)
         {
-            YAW_D4310_positiontarget = 40;
+            pitch4310_positiontarget = 42;
         }
 
-        if(YAW_D4310_positiontarget < -4)
+        if(pitch4310_positiontarget < -7)
         {
-            YAW_D4310_positiontarget = -4;
+            pitch4310_positiontarget = -7;
         }
 
    
 
 
-        if(Yaw6020_positiontarget > 179.5)
+        if(Yaw4310_positionTarget > 179.5)
         {
-            Yaw6020_positiontarget =-179.5;
+            Yaw4310_positionTarget =-179.5;
         }
-         if(Yaw6020_positiontarget <-179.5)
+         if(Yaw4310_positionTarget <-179.5)
         {
-            Yaw6020_positiontarget =179.5;
+            Yaw4310_positionTarget =179.5;
         }
 
         if(SBUS.SH == 1695 && SBUS.SH_last == 353 && gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)

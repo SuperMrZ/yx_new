@@ -32,6 +32,12 @@ PID pid_D4310Pitch_speed=
 PID pid_D4310Pitch_angle=
 {0.5,0.001,0.04,50,1000,10,0,0,0,0,0,0};
 
+PID pid_D4310Yaw_speed=
+{1.0,0,0,8,18,0x3000,0,0,0,0,0,0};
+
+PID pid_D4310Yaw_angle=
+{0.1,0,0,50,1000,10,0,0,0,0,0,0};
+
 PID pid_M6020Yaw_speed=
 {50,0,40,1500,0x3000,0x3000,0,0,0,0,0,0};
 
@@ -43,6 +49,8 @@ PID_DiffFirst pid_DiffFirst_M6020Yaw_speed=
 
 PID_DiffFirst pid_DiffFirst_M6020Yaw_angle=
 {30,0.003,0,50,800,5,10,0,0,0,0,0,0,0};
+
+
 
 float pid_output(PID *pid, float feedback, float target) 
 {
