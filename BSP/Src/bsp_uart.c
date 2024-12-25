@@ -72,6 +72,7 @@ void remoteDecode()
     if(SBUS.SF ==353)//急停
     {
         disable_damiao_motor(0x01);
+        disable_damiao_motor(0x02);
         M3508Friction_currnt[0]=0;
         M3508Friction_currnt[1]=0;
         M3508Friction_currnt[2]=0;
@@ -89,6 +90,7 @@ void remoteDecode()
     {
         
         enable_damiao_motor(0x01);
+        enable_damiao_motor(0x02);
 
         if(SBUS.SB == 353)
         {

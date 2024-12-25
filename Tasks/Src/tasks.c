@@ -86,6 +86,7 @@ void Sendmessage(void *argument)
 
     jishu ++;
    ctrl_position_damiao_motor(0x01,YAW_D4310_positiontarget);
+   
     // ctrl_speed_damiao_motor(0x01,(SBUS.Ch2-1024)*0.005);
 
     if(jishu >10)

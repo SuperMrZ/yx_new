@@ -53,6 +53,7 @@ motorReceiveInfo M3508Load;
 motorReceiveInfo M2006Pushrop;
 motorReceiveInfo M6020Yaw;
 damiao_recieve damiao_recieve_pitch;
+damiao_recieve damiao_recieve_yaw;
 extern float sin_signal;
 extern gambleState gamble_state;
 
