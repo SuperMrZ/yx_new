@@ -52,6 +52,7 @@ motorReceiveInfo M3508Friction[3];
 motorReceiveInfo M3508Load;
 motorReceiveInfo M2006Pushrop;
 motorReceiveInfo M6020Yaw;
+down_receve      down_receve1;
 damiao_recieve damiao_recieve_pitch;
 damiao_recieve damiao_recieve_yaw;
 extern float sin_signal;

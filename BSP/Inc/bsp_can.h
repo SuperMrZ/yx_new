@@ -23,6 +23,13 @@ typedef struct {
 	int16_t last_ecd;
 } motorReceiveInfo;
 
+typedef struct {
+	int16_t target_color;
+	uint32_t shoot_speed_t;
+	float shoot_speed;
+
+} down_receve;
+
 
 void BspCan1Init();
 void BspCan2Init();

@@ -13,6 +13,7 @@ extern motorReceiveInfo M3508Load;
 extern motorReceiveInfo M6020Yaw;
 extern damiao_recieve damiao_recieve_pitch;
 extern damiao_recieve damiao_recieve_yaw;
+extern down_receve      down_receve1;
 
 
 
@@ -105,19 +106,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 
         }
         break;
-        case 0x21:
-        {
-           	damiao_recieve_yaw.p=(hcan1RxFrame.data[1] << 8) |hcan1RxFrame.data[2];
-		    damiao_recieve_yaw.v=(hcan1RxFrame.data[3] << 4) |(hcan1RxFrame.data[4] >> 4);
-		    damiao_recieve_yaw.t=((hcan1RxFrame.data[4]&0xF) << 8) |hcan1RxFrame.data[5];
-
-
-            damiao_recieve_yaw.position = uint_to_float(damiao_recieve_yaw.p, -12.5, 12.5, 16); // (-12.5, 12.5)
-            damiao_recieve_yaw.velocity = uint_to_float(damiao_recieve_yaw.v, -45, 45, 12); // (-45.0, 45.0)
-            damiao_recieve_yaw.torque = uint_to_float(damiao_recieve_yaw.t, -18, 18, 12);   // (-18.0, 18.0) 
-
-        }
-        break;
 
 
         case 0x201:
@@ -199,6 +187,29 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan)
 		//在下面进行解码begin
                 switch (hcan2RxFrame.header.StdId)
         {
+        case 0x21:
+        {
+           	damiao_recieve_yaw.p=(hcan1RxFrame.data[1] << 8) |hcan1RxFrame.data[2];
+		    damiao_recieve_yaw.v=(hcan1RxFrame.data[3] << 4) |(hcan1RxFrame.data[4] >> 4);
+		    damiao_recieve_yaw.t=((hcan1RxFrame.data[4]&0xF) << 8) |hcan1RxFrame.data[5];
+
+
+            damiao_recieve_yaw.position = uint_to_float(damiao_recieve_yaw.p, -12.5, 12.5, 16); // (-12.5, 12.5)
+            damiao_recieve_yaw.velocity = uint_to_float(damiao_recieve_yaw.v, -45, 45, 12); // (-45.0, 45.0)
+            damiao_recieve_yaw.torque = uint_to_float(damiao_recieve_yaw.t, -18, 18, 12);   // (-18.0, 18.0) 
+
+        }
+        break;
+
+        case 0x125:
+        {
+            down_receve1.target_color = (int16_t)(hcan2RxFrame.data[1]<<8)|hcan2RxFrame.data[0];
+            down_receve1.shoot_speed_t = (hcan2RxFrame.data[7]<<24)|(hcan2RxFrame.data[6]<<16)|(hcan2RxFrame.data[5]<<8)|(hcan2RxFrame.data[4]);
+            down_receve1.shoot_speed = *(float*)&down_receve1.shoot_speed_t;
+        }
+            break;
+
+
         case 0x204:
         {
             M3508Load.ecd=(hcan2RxFrame.data[0]<<8)|hcan2RxFrame.data[1];//转子机械角度
@@ -217,20 +228,8 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan)
 
         }
             break;
-            
-        case 0x21:
-        {
-           	damiao_recieve_yaw.p=(hcan1RxFrame.data[1] << 8) |hcan1RxFrame.data[2];
-		    damiao_recieve_yaw.v=(hcan1RxFrame.data[3] << 4) |(hcan1RxFrame.data[4] >> 4);
-		    damiao_recieve_yaw.t=((hcan1RxFrame.data[4]&0xF) << 8) |hcan1RxFrame.data[5];
 
 
-            damiao_recieve_yaw.position = uint_to_float(damiao_recieve_yaw.p, -12.5, 12.5, 16); // (-12.5, 12.5)
-            damiao_recieve_yaw.velocity = uint_to_float(damiao_recieve_yaw.v, -45, 45, 12); // (-45.0, 45.0)
-            damiao_recieve_yaw.torque = uint_to_float(damiao_recieve_yaw.t, -18, 18, 12);   // (-18.0, 18.0) 
-
-        }
-        break;
 
 
 

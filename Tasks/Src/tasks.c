@@ -8,6 +8,8 @@ void M3508Load_Move();
 
 extern SBUS_Buffer SBUS;
 extern INS_t INS;
+extern damiao_recieve damiao_recieve_yaw;
+extern down_receve    down_receve1;
 
 
 
@@ -164,17 +166,26 @@ void Down_SendMEG()
 
 
 uint32_t temp;
+float temp3;
+uint32_t temp2;
 
 
 void Down_SendMEG2()
 {
    temp = *(uint32_t*)&INS.Yaw;
+   temp3 = damiao_recieve_yaw.position;
+   while (temp3>3.1415926)
+   {temp3 -=3.1415926;}
+   while (temp3<-3.1415926)
+   {temp3 +=3.1415926;}
+   temp2 =*(uint32_t*)&temp3;
+ 
 
   //  temp = &INS.Yaw;
   down_MEG2[0] = (uint16_t)(temp >> 16);  // 获取高16位
   down_MEG2[1] = (uint16_t)(temp & 0xFFFF);  // 获取低16位
-  down_MEG2[2] = (uint16_t)(M6020Yaw.ecd);
-  down_MEG2[3] = 0;
+  down_MEG2[2] = (uint16_t)(temp2 >> 16);  // 获取高16位
+  down_MEG2[3] = (uint16_t)(temp2 & 0xFFFF);  // 获取低16位
   
   CAN_SendData(2,0x124,down_MEG2);
 
@@ -231,7 +242,7 @@ void up_send()
 {
 
 
-a2.detect_color =1;
+a2.detect_color =down_receve1.target_color;
 a2.mode = 3 ;
 a2.reserved = 0;
 a2.reset_tracker =0 ;
@@ -242,7 +253,7 @@ float data1 =(-INS.Pitch)*0.01745329;
 
 float data2 =INS.Yaw*0.01745329;
 
-float data3 = 0.0f;
+float data3 = down_receve1.shoot_speed;
 int8_t data4 = 0;
 int8_t data5 = 0;
 int8_t data6 = 0;
