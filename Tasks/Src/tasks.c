@@ -60,7 +60,7 @@ void StartTask02(void *argument)
       cmd_M3508Friction_speed(M3508Friction_speedTarget);
 
         cmd_M6020Yaw_angle(Yaw6020_positiontarget);
-      // cmd_M6020Yaw_speed(SBUS.Ch1-1024);
+      //  cmd_M6020Yaw_speed(SBUS.Ch1-1024);
 
 
     }

@@ -128,7 +128,9 @@ void cmd_M6020Yaw_speed(int16_t target)
 {
     int32_t motor_currnt;
 	
-        motor_currnt =  pid_output(&pid_M6020Yaw_speed,M6020Yaw.speed_rpm,target); 
+        // motor_currnt =  pid_output(&pid_M6020Yaw_speed,M6020Yaw.speed_rpm,target); 
+        motor_currnt = target*0.2f + pid_output(&pid_M6020Yaw_speed,M6020Yaw.speed_rpm,target); 
+
         // if (motor_currnt>20000)
         // {
         //     motor_currnt =20000;
@@ -144,11 +146,15 @@ void cmd_M6020Yaw_speed(int16_t target)
 
 
 }
+float yaw_positiontarget_last;
+float test2;
 
 void cmd_M6020Yaw_angle(int16_t target)
 {
     int16_t speed;
     int16_t cur;
+    int16_t target2;
+    target2 = target; 
 
     
         cur=INS.Yaw;
@@ -160,8 +166,22 @@ void cmd_M6020Yaw_angle(int16_t target)
         {
             cur =cur-360;
         }
-        speed =  pid_output(&pid_M6020Yaw_angle,cur,target); 
+
+         if(target2-yaw_positiontarget_last>180)
+        {
+            target2 =target2-360;
+            
+        }
+        else if(target2-yaw_positiontarget_last<=-180)
+        {
+            target2 +=360;
+        }
+
+        test2 = (float)(target2 - yaw_positiontarget_last)*1.0f;
+
+        speed =  (target2 - yaw_positiontarget_last)*1.0f+ pid_output(&pid_M6020Yaw_angle,cur,target); 
         // speed = pidOutputDiffFirst(&pid_DiffFirst_M6020Yaw_angle,cur,target);
+        yaw_positiontarget_last =target;
     
     cmd_M6020Yaw_speed(speed);
 
