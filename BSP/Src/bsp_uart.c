@@ -94,8 +94,8 @@ void remoteDecode()
 
         if(SBUS.SB == 353)
         {
-            pitch4310_positiontarget = pitch4310_positiontarget-(SBUS.Ch2-1024)*0.004;
-            Yaw4310_positionTarget = Yaw4310_positionTarget - (float)(SBUS.Ch1-1024)*0.0045;
+            pitch4310_positiontarget = pitch4310_positiontarget-(float)(SBUS.Ch2-1024)*0.004;
+            Yaw4310_positionTarget = Yaw4310_positionTarget - (float)(SBUS.Ch1-1024)*0.0090;
         }
         if(SBUS.SB == 1024)
         {
@@ -105,7 +105,7 @@ void remoteDecode()
                 Yaw4310_positionTarget  =Yaw4310_positionTarget;
             }
             else{
-                 pitch4310_positiontarget = - Up_ReceivePacket.pitch_angle*57.29578;
+                  pitch4310_positiontarget = - Up_ReceivePacket.pitch_angle*57.29578;
                 if(Up_ReceivePacket.yaw_angle<1 && Up_ReceivePacket.yaw_angle>-1)
                 {
                     Yaw4310_positionTarget = Up_ReceivePacket.yaw_angle*57.29578;
@@ -152,7 +152,7 @@ void remoteDecode()
 
         if(SBUS.SH == 1695 && SBUS.SH_last == 353 && gamble_state.bullet ==1 && gamble_state.pushrot_position ==2)
         {
-            Load_M3508_positionTarget += 8192*2.82 + ( M3508Load.ecd );
+            Load_M3508_positionTarget = Load_M3508_positionTarget + 8192*2.85 + ( M3508Load.ecd );
         }
 
         /*推杆状态判定开始*/

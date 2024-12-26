@@ -189,9 +189,9 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan)
         {
         case 0x21:
         {
-           	damiao_recieve_yaw.p=(hcan1RxFrame.data[1] << 8) |hcan1RxFrame.data[2];
-		    damiao_recieve_yaw.v=(hcan1RxFrame.data[3] << 4) |(hcan1RxFrame.data[4] >> 4);
-		    damiao_recieve_yaw.t=((hcan1RxFrame.data[4]&0xF) << 8) |hcan1RxFrame.data[5];
+           	damiao_recieve_yaw.p=(hcan2RxFrame.data[1] << 8) |hcan2RxFrame.data[2];
+		    damiao_recieve_yaw.v=(hcan2RxFrame.data[3] << 4) |(hcan2RxFrame.data[4] >> 4);
+		    damiao_recieve_yaw.t=((hcan2RxFrame.data[4]&0xF) << 8) |hcan2RxFrame.data[5];
 
 
             damiao_recieve_yaw.position = uint_to_float(damiao_recieve_yaw.p, -12.5, 12.5, 16); // (-12.5, 12.5)

@@ -13,7 +13,8 @@ extern down_receve    down_receve1;
 
 
 
-int16_t jishu;
+int16_t aim_count;
+int16_t speed_target;
 
 
 
@@ -55,17 +56,19 @@ void StartTask02(void *argument)
       }
       
       M3508Load_Move();
-      //  cmd_M3508Laod_speed(5*(SBUS.Ch1 - 1024));
-
+      speed_target = 10*(SBUS.Ch1 - 1024);
+      // cmd_M3508Laod_speed(speed_target);
+      // cmd_M3508Load_angle(speed_target);
+      // M3508Friction_currnt[3]=5*(SBUS.Ch1 - 1024);
 
 
       cmd_M3508Friction_speed(M3508Friction_speedTarget);
+      
       // ctrl_torq_damiao_motor(0x02,0.5);
-      // ctrl_speed_yaw_damiao_motor(0x02,(SBUS.Ch1-1024)*0.001);
+        // ctrl_speed_yaw_damiao_motor(0x02,-(SBUS.Ch1-1024)*0.03);
       ctrl_position_yaw_damiao_motor(0x02,Yaw4310_positionTarget);
 
-        // cmd_M6020Yaw_angle(Yaw4310_positionTarget);
-      //  cmd_M6020Yaw_speed(SBUS.Ch1-1024);
+      
 
 
     }
@@ -89,15 +92,15 @@ void Sendmessage(void *argument)
    Down_SendMEG();
    Down_SendMEG2();
 
-    jishu ++;
-   ctrl_position_damiao_motor(0x01,pitch4310_positiontarget);
+    aim_count ++;
+    ctrl_position_damiao_motor(0x01,pitch4310_positiontarget);
    
-    // ctrl_speed_damiao_motor(0x01,(SBUS.Ch2-1024)*0.005);
+    //  ctrl_speed_damiao_motor(0x01,(SBUS.Ch2-1024)*0.005);
 
-    if(jishu >10)
+    if(aim_count >10)
     {
       up_send();
-      jishu =0;
+      aim_count =0;
 
     }
     
@@ -175,9 +178,9 @@ void Down_SendMEG2()
    temp = *(uint32_t*)&INS.Yaw;
    temp3 = damiao_recieve_yaw.position;
    while (temp3>3.1415926)
-   {temp3 -=3.1415926;}
+   {temp3 -=6.2831853;}
    while (temp3<-3.1415926)
-   {temp3 +=3.1415926;}
+   {temp3 +=6.2831853;}
    temp2 =*(uint32_t*)&temp3;
  
 

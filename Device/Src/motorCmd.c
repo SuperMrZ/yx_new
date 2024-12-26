@@ -72,14 +72,14 @@ void cmd_M3508Load_angle(int16_t target)
 
  	
         cur=M3508Load.ecd;
-        // if(target-cur>4096)
-        // {
-        //     cur +=8192;
-        // }
-        // else if(target-cur<=-4096)
-        // {
-        //     cur =cur-8192;
-        // }
+        if(target-cur>4096)
+        {
+            cur +=8192;
+        }
+        else if(target-cur<=-4096)
+        {
+            cur =cur-8192;
+        }
         speed = pid_output(&pid_M3508Laod_angle,cur,target); 
     
     cmd_M3508Laod_speed(speed);

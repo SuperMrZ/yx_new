@@ -4,6 +4,7 @@
 
 int16_t D4310Pitch_currnt[4];
 extern  damiao_recieve damiao_recieve_pitch;
+extern  damiao_recieve damiao_recieve_yaw;
 extern SBUS_Buffer SBUS;
 extern INS_t INS;
 float	uint_to_float(uint16_t x_int, float x_min, float x_max, int bits){
@@ -138,8 +139,54 @@ void ctrl_torq_damiao_motor( uint16_t id, float _torq)
     damiao_can_send_data1[5] = (kd_tmp >> 4);
     damiao_can_send_data1[6] = ((kd_tmp & 0xF) << 4) | (tor_tmp >> 8);
     damiao_can_send_data1[7] = tor_tmp;
-		
-		HAL_CAN_AddTxMessage(&hcan1, &damiao_tx_message1, damiao_can_send_data1, &send_mail_box);
+
+
+		if(id ==1)
+    {
+		   HAL_CAN_AddTxMessage(&hcan1, &damiao_tx_message1, damiao_can_send_data1, &send_mail_box);
+    }
+
+    
+
+}
+
+void ctrl_torq_yaw_damiao_motor( uint16_t id, float _torq)
+{
+    CAN_TxHeaderTypeDef  damiao_tx_message1;//发送数据的数据头
+    uint8_t              damiao_can_send_data1[8];//要发送的数据数组  
+    uint16_t pos_tmp, vel_tmp, kp_tmp, kd_tmp, tor_tmp;
+
+    // 数据归一化并转换为无符号整型
+    pos_tmp = float_to_uint(0, -12.5, 12.5, 16);//注意所有调用的float_to_uint函数后三个参数均由调参软件上读出
+    vel_tmp = float_to_uint(0, -45, 45, 12);    //如果更改会导致最后的解码错误
+    kp_tmp = float_to_uint(0, 0, 500, 12);
+    kd_tmp = float_to_uint(0, 0, 5, 12);
+    tor_tmp = float_to_uint(_torq, -18, 18, 12);
+
+    // CAN 数据帧配置
+		uint32_t send_mail_box;
+    damiao_tx_message1.StdId = id;
+    damiao_tx_message1.IDE = CAN_ID_STD;
+    damiao_tx_message1.RTR = CAN_RTR_DATA;
+    damiao_tx_message1.DLC = 0x08;
+    // 数据分配到 CAN 数据帧
+    damiao_can_send_data1[0] = (pos_tmp >> 8);
+    damiao_can_send_data1[1] = pos_tmp;
+    damiao_can_send_data1[2] = (vel_tmp >> 4);
+    damiao_can_send_data1[3] = ((vel_tmp & 0xF) << 4) | (kp_tmp >> 8);
+    damiao_can_send_data1[4] = kp_tmp;
+    damiao_can_send_data1[5] = (kd_tmp >> 4);
+    damiao_can_send_data1[6] = ((kd_tmp & 0xF) << 4) | (tor_tmp >> 8);
+    damiao_can_send_data1[7] = tor_tmp;
+
+
+		if(id ==2)
+    {
+		   HAL_CAN_AddTxMessage(&hcan2, &damiao_tx_message1, damiao_can_send_data1, &send_mail_box);
+    }
+
+    
+
 }
 
 void ctrl_speed_damiao_motor( uint16_t id, float speed)
@@ -159,7 +206,7 @@ void ctrl_position_damiao_motor( uint16_t id, float position)
   // speed = (SBUS.Ch2-1024)*0.005f + pid_output(&pid_D4310Pitch_angle,damiao_recieve_pitch.position,position);
   // speed =  (position - *damiao_position)*0.02f + pid_output(&pid_D4310Pitch_angle,INS.Pitch,position);
   // *damiao_position = position;
-  speed =  pid_output(&pid_D4310Pitch_angle,damiao_recieve_pitch.position,position);
+  speed =  pid_output(&pid_D4310Pitch_angle,INS.Pitch,position);
   ctrl_speed_damiao_motor(id,-speed);
 
 
@@ -170,8 +217,8 @@ void ctrl_position_damiao_motor( uint16_t id, float position)
 void ctrl_speed_yaw_damiao_motor( uint16_t id, float speed)
 {
   float torq;
-  torq = pid_output(&pid_D4310Yaw_speed,damiao_recieve_pitch.velocity,speed);
-  ctrl_torq_damiao_motor(id,torq);
+  torq = pid_output(&pid_D4310Yaw_speed,damiao_recieve_yaw.velocity,speed);
+  ctrl_torq_yaw_damiao_motor(id,torq);
 } 
 
 
@@ -195,7 +242,7 @@ void ctrl_position_yaw_damiao_motor( uint16_t id, float position)
   // speed =  (position - *damiao_position)*0.02f + pid_output(&pid_D4310Pitch_angle,INS.Pitch,position);
   // *damiao_position = position;
   speed =  pid_output(&pid_D4310Yaw_angle,cur,position);
-  ctrl_speed_damiao_motor(id,speed);
+  ctrl_speed_yaw_damiao_motor(id,speed);
 
 
 
