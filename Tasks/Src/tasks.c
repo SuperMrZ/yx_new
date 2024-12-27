@@ -1,7 +1,7 @@
 #include "tasks.h"
 #include "stdbool.h"
 
- int16_t down_MEG[4];
+uint16_t down_MEG[4];
 uint16_t down_MEG2[4];
 
 void M3508Load_Move();
@@ -21,6 +21,9 @@ int16_t speed_target;
 SendPacket Up_SendPacket;
 
 
+uint16_t Encode_Switch(uint16_t sh_value, uint16_t se_value);
+
+
 /*第一个任务，用于计算数据*/
 void StartTask02(void *argument)
 {
@@ -37,6 +40,7 @@ void StartTask02(void *argument)
     /*imu解算结束*/
 
     /*电机电流控制计算开始*/
+    ctrl_position_yaw_damiao_motor(0x02,Yaw4310_positionTarget);
 
     if(SBUS.SF == 1695)
     {
@@ -60,13 +64,15 @@ void StartTask02(void *argument)
       // cmd_M3508Laod_speed(speed_target);
       // cmd_M3508Load_angle(speed_target);
       // M3508Friction_currnt[3]=5*(SBUS.Ch1 - 1024);
+      
 
 
       cmd_M3508Friction_speed(M3508Friction_speedTarget);
+      Cmd_gamble3508_currnt();
       
       // ctrl_torq_damiao_motor(0x02,0.5);
         // ctrl_speed_yaw_damiao_motor(0x02,-(SBUS.Ch1-1024)*0.03);
-      ctrl_position_yaw_damiao_motor(0x02,Yaw4310_positionTarget);
+      
 
       
 
@@ -88,7 +94,6 @@ void Sendmessage(void *argument)
   while(1)
   {
    Cmd_gamble2006_currnt();
-   Cmd_gamble3508_currnt();
    Down_SendMEG();
    Down_SendMEG2();
 
@@ -163,7 +168,7 @@ void Down_SendMEG()
   down_MEG[0]=SBUS.Ch3;
   down_MEG[1]=SBUS.Ch4;
   down_MEG[2]=SBUS.Ch1;
-  down_MEG[3]=SBUS.SA;
+  down_MEG[3]=Encode_Switch(SBUS.SH,SBUS.SA);//sa实际上是se
   CAN_SendData(2,0x123,down_MEG);
 } 
 
@@ -177,10 +182,10 @@ void Down_SendMEG2()
 {
    temp = *(uint32_t*)&INS.Yaw;
    temp3 = damiao_recieve_yaw.position;
-   while (temp3>3.1415926)
-   {temp3 -=6.2831853;}
-   while (temp3<-3.1415926)
-   {temp3 +=6.2831853;}
+  //  while (temp3>3.1415926)
+  //  {temp3 -=6.2831852;}
+  //  while (temp3<-3.1415926)
+  //  {temp3 +=6.2831852;}
    temp2 =*(uint32_t*)&temp3;
  
 
@@ -292,3 +297,22 @@ Append_CRC16_Check_Sum(up_send_data,19);
 }
 
 
+uint16_t Encode_Switch(uint16_t sh_value, uint16_t se_value)
+{
+    uint16_t sh_code = 0;
+    uint16_t se_code = 0;
+    
+    // 编码SH
+    if(sh_value < 700)        sh_code = 0;  // 353对应00
+    else if(sh_value < 1360)  sh_code = 1;  // 1024对应01
+    else                      sh_code = 2;  // 1695对应10
+    
+    // 编码SE
+    if(se_value < 700)        se_code = 0;  // 353对应00
+    else if(se_value < 1360)  se_code = 1;  // 1024对应01
+    else                      se_code = 2;  // 1695对应10
+    
+    // 将SH和SE的编码组合到一起
+    // SH放在低2位，SE放在3-4位
+    return (se_code << 2) | sh_code;
+}
