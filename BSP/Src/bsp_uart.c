@@ -106,14 +106,9 @@ void remoteDecode()
             }
             else{
                   pitch4310_positiontarget = - Up_ReceivePacket.pitch_angle*57.29578;
-                if(Up_ReceivePacket.yaw_angle<1 && Up_ReceivePacket.yaw_angle>-1)
-                {
+
                     Yaw4310_positionTarget = Up_ReceivePacket.yaw_angle*57.29578;
-                }
-                else
-                {
-                   Yaw4310_positionTarget =Yaw4310_positionTarget;
-                }
+      
 
             }
 

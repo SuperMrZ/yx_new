@@ -200,8 +200,7 @@ void Cmd_gamble3508_currnt(void)
     currnt_target[1] = M3508Friction_currnt[1];
     currnt_target[2] = M3508Friction_currnt[2];
     currnt_target[3] = M3508Friction_currnt[3];
-    CAN_SendData(1,0x200,currnt_target);
-    // CAN_SendData(2,0x200,currnt_target); 
+    CAN_SendData(1,0x200,currnt_target); 
 } 
 
 void Cmd_gamble2006_currnt(void)

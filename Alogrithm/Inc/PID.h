@@ -45,6 +45,7 @@ float OUT_last
 
 
 float pid_output(PID *pid, float feedback, float target) ;
+float pid_output_combineI(PID *pid, float feedback, float target) ;
 float pidOutputDiffFirst(PID_DiffFirst *pid, float feedback, float target) ;
 
 

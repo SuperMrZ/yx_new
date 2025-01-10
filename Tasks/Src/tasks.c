@@ -4,7 +4,6 @@
 uint16_t down_MEG[4];
 uint16_t down_MEG2[4];
 
-void M3508Load_Move();
 
 extern SBUS_Buffer SBUS;
 extern INS_t INS;
@@ -22,6 +21,7 @@ SendPacket Up_SendPacket;
 
 
 uint16_t Encode_Switch(uint16_t sh_value, uint16_t se_value);
+float yaw_speed_target;
 
 
 /*第一个任务，用于计算数据*/
@@ -40,7 +40,11 @@ void StartTask02(void *argument)
     /*imu解算结束*/
 
     /*电机电流控制计算开始*/
-    ctrl_position_yaw_damiao_motor(0x02,Yaw4310_positionTarget);
+     ctrl_position_yaw_damiao_motor(0x02,Yaw4310_positionTarget);
+    // yaw_speed_target = (SBUS.Ch1-1024)*0.01;
+    // ctrl_speed_yaw_damiao_motor(0x02,yaw_speed_target);
+
+
 
     if(SBUS.SF == 1695)
     {
@@ -59,23 +63,11 @@ void StartTask02(void *argument)
         M2006PushRop_Move();
       }
       
-      M3508Load_Move();
-      speed_target = 10*(SBUS.Ch1 - 1024);
-      // cmd_M3508Laod_speed(speed_target);
-      // cmd_M3508Load_angle(speed_target);
-      // M3508Friction_currnt[3]=5*(SBUS.Ch1 - 1024);
-      
 
 
       cmd_M3508Friction_speed(M3508Friction_speedTarget);
       Cmd_gamble3508_currnt();
       
-      // ctrl_torq_damiao_motor(0x02,0.5);
-        // ctrl_speed_yaw_damiao_motor(0x02,-(SBUS.Ch1-1024)*0.03);
-      
-
-      
-
 
     }
 
@@ -95,6 +87,7 @@ void Sendmessage(void *argument)
   {
    Cmd_gamble2006_currnt();
    Down_SendMEG();
+   osDelay(1);
    Down_SendMEG2();
 
     aim_count ++;
@@ -102,37 +95,35 @@ void Sendmessage(void *argument)
    
     //  ctrl_speed_damiao_motor(0x01,(SBUS.Ch2-1024)*0.005);
 
-    if(aim_count >10)
+    if(aim_count >4)
     {
       up_send();
       aim_count =0;
 
     }
-    
-    //  Cmd_gamble6020_currnt();
     osDelay(1);
   }
 }
 
 
 
-void M3508Load_Move()
-{
-  if(Load_M3508_positionTarget>8192)
-  {
-    cmd_M3508Laod_speed(1000);
-    if(M3508Load.last_ecd-M3508Load.ecd > 4096)
-    {
-      Load_M3508_positionTarget=Load_M3508_positionTarget-8192;
-    }
-    M3508Load.last_ecd = M3508Load.ecd;
-  }
+// void M3508Load_Move()
+// {
+//   if(Load_M3508_positionTarget>8192)
+//   {
+//     cmd_M3508Laod_speed(1000);
+//     if(M3508Load.last_ecd-M3508Load.ecd > 4096)
+//     {
+//       Load_M3508_positionTarget=Load_M3508_positionTarget-8192;
+//     }
+//     M3508Load.last_ecd = M3508Load.ecd;
+//   }
 
-  if(Load_M3508_positionTarget<8192)
-  {
-    cmd_M3508Load_angle(Load_M3508_positionTarget);
-  }
-}
+//   if(Load_M3508_positionTarget<8192)
+//   {
+//     cmd_M3508Load_angle(Load_M3508_positionTarget);
+//   }
+// }
 
 
 void M2006PushRop_Move()

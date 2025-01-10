@@ -197,38 +197,39 @@ void ctrl_speed_damiao_motor( uint16_t id, float speed)
 } 
 
 
-float *damiao_position;
-
 void ctrl_position_damiao_motor( uint16_t id, float position)
 {
   float speed;
   
-  // speed = (SBUS.Ch2-1024)*0.005f + pid_output(&pid_D4310Pitch_angle,damiao_recieve_pitch.position,position);
-  // speed =  (position - *damiao_position)*0.02f + pid_output(&pid_D4310Pitch_angle,INS.Pitch,position);
-  // *damiao_position = position;
+
+  
   speed =  pid_output(&pid_D4310Pitch_angle,INS.Pitch,position);
   ctrl_speed_damiao_motor(id,-speed);
 
 
-
 } 
 
 
+  float v_yaw;
 void ctrl_speed_yaw_damiao_motor( uint16_t id, float speed)
 {
   float torq;
-  torq = pid_output(&pid_D4310Yaw_speed,damiao_recieve_yaw.velocity,speed);
+
+  v_yaw =0.4*damiao_recieve_yaw.velocity + 0.6*damiao_recieve_yaw.velocity_last;
+
+  torq = pid_output_combineI(&pid_D4310Yaw_speed,v_yaw,speed);
+  damiao_recieve_yaw.velocity_last =damiao_recieve_yaw.velocity;
   ctrl_torq_yaw_damiao_motor(id,torq);
 } 
 
-
+   float speed_yaw_target;
 void ctrl_position_yaw_damiao_motor( uint16_t id, float position)
 {
-  float speed;
-  int16_t cur;
-  cur=INS.Yaw;
 
-        if(position-cur>180)
+  float cur;
+  cur=INS.Yaw;
+  
+        if(position-cur>180)  
         {
             cur +=360;
         }
@@ -237,13 +238,16 @@ void ctrl_position_yaw_damiao_motor( uint16_t id, float position)
             cur =cur-360;
         }
 
-
-  // speed = (SBUS.Ch2-1024)*0.005f + pid_output(&pid_D4310Pitch_angle,damiao_recieve_pitch.position,position);
-  // speed =  (position - *damiao_position)*0.02f + pid_output(&pid_D4310Pitch_angle,INS.Pitch,position);
-  // *damiao_position = position;
-  speed =  pid_output(&pid_D4310Yaw_angle,cur,position);
-  ctrl_speed_yaw_damiao_motor(id,speed);
-
+  speed_yaw_target =  pid_output(&pid_D4310Yaw_angle,cur,position);
+  ctrl_speed_yaw_damiao_motor(id,speed_yaw_target);
 
 
 } 
+
+
+void count1()
+{
+  
+
+
+}

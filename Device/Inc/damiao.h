@@ -24,6 +24,7 @@ void ctrl_position_yaw_damiao_motor( uint16_t id, float position);
 	int16_t t;//力矩
 	float position;
 	float velocity;
+	float velocity_last;
 	float torque;
     
 }damiao_recieve;
