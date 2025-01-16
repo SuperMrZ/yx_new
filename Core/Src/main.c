@@ -139,6 +139,7 @@ int main(void)
    __HAL_UART_ENABLE_IT(&huart3, UART_IT_IDLE); //使能IDLE中断
 
   HAL_TIM_Base_Start_IT(&htim3);
+   HAL_TIM_Base_Start_IT(&htim4);
   
   BspCan1Init();
   BspCan2Init() ;

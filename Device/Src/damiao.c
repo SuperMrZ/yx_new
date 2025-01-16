@@ -245,9 +245,3 @@ void ctrl_position_yaw_damiao_motor( uint16_t id, float position)
 } 
 
 
-void count1()
-{
-  
-
-
-}

@@ -193,6 +193,8 @@ void Down_SendMEG2()
 
  ReceivePacket Up_ReceivePacket;
 
+int16_t recieve_flag;
+int16_t recieve_hz;
 
 void up_receive(uint8_t* Buf, uint32_t *Len)
 {
@@ -229,6 +231,7 @@ void up_receive(uint8_t* Buf, uint32_t *Len)
     // checksum在最后2个字节，但已经通过CRC16验证过了
     
     Up_ReceivePacket.data_valid = true;  // 标记数据为有效
+    recieve_flag++;
 
 }
 
@@ -306,4 +309,13 @@ uint16_t Encode_Switch(uint16_t sh_value, uint16_t se_value)
     // 将SH和SE的编码组合到一起
     // SH放在低2位，SE放在3-4位
     return (se_code << 2) | sh_code;
+}
+
+
+void count1()
+{
+  recieve_hz = recieve_flag;
+  recieve_flag =0;
+
+
 }
