@@ -34,6 +34,8 @@ typedef struct
 
 extern SendPacket Up_SendPacket;
 extern  ReceivePacket Up_ReceivePacket;
+extern int16_t Pushrop_setpoosition;
+extern int16_t shoot_permission;
 
 
 

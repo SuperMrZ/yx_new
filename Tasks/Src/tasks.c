@@ -40,14 +40,17 @@ void StartTask02(void *argument)
     /*imu解算结束*/
 
     /*电机电流控制计算开始*/
-     ctrl_position_yaw_damiao_motor(0x02,Yaw4310_positionTarget);
+
+
+    if(SBUS.SF == 1695)
+    {
+
+    ctrl_position_yaw_damiao_motor(0x02,Yaw4310_positionTarget);
     // yaw_speed_target = (SBUS.Ch1-1024)*0.01;
     // ctrl_speed_yaw_damiao_motor(0x02,yaw_speed_target);
 
 
 
-    if(SBUS.SF == 1695)
-    {
       if(SBUS.SG ==353 && back_flag ==1)
       {
         cmd_M2006pushrop_speed(pushrot_M2006_speedTarget);
@@ -67,6 +70,7 @@ void StartTask02(void *argument)
 
       cmd_M3508Friction_speed(M3508Friction_speedTarget);
       Cmd_gamble3508_currnt();
+      
       
 
     }
@@ -97,7 +101,7 @@ void Sendmessage(void *argument)
 
     if(aim_count >4)
     {
-      up_send();
+      
       aim_count =0;
 
     }
@@ -125,6 +129,7 @@ void Sendmessage(void *argument)
 //   }
 // }
 
+int16_t Pushrop_setpoosition;
 
 void M2006PushRop_Move()
 {
@@ -136,6 +141,7 @@ void M2006PushRop_Move()
       pushrot_M2006_positionTarget -= 8192;
     }
     M2006Pushrop.last_ecd = M2006Pushrop.ecd;
+    Pushrop_setpoosition =0;
   }
   if(pushrot_M2006_positionTarget < 0)
   {
@@ -145,11 +151,13 @@ void M2006PushRop_Move()
       pushrot_M2006_positionTarget += 8192;
     }
     M2006Pushrop.last_ecd = M2006Pushrop.ecd;
+    Pushrop_setpoosition =0;
   } 
 
   if(0 < pushrot_M2006_positionTarget && pushrot_M2006_positionTarget <8192)
   {
     cmd_M2006pushrop_angle(pushrot_M2006_positionTarget);
+    Pushrop_setpoosition =1;
   }
 }
 
@@ -195,6 +203,7 @@ void Down_SendMEG2()
 
 int16_t recieve_flag;
 int16_t recieve_hz;
+int16_t can_shoot_flag;
 
 void up_receive(uint8_t* Buf, uint32_t *Len)
 {
@@ -220,6 +229,7 @@ void up_receive(uint8_t* Buf, uint32_t *Len)
     Up_ReceivePacket.armor_id = (status_byte & 0x3C) >> 2;       // 中间四位
     Up_ReceivePacket.bullet_freq = (status_byte & 0xC0) >> 6;    // 最高两位
 
+
     // 解析pitch角度（4字节浮点数）
     float* pitch_ptr = (float*)&Buf[2];
     Up_ReceivePacket.pitch_angle = *pitch_ptr;
@@ -227,6 +237,10 @@ void up_receive(uint8_t* Buf, uint32_t *Len)
     // 解析yaw角度（4字节浮点数）
     float* yaw_ptr = (float*)&Buf[6];
     Up_ReceivePacket.yaw_angle = *yaw_ptr;
+    if(Up_ReceivePacket.can_shoot ==1)
+    {
+      can_shoot_flag++;
+    }
 
     // checksum在最后2个字节，但已经通过CRC16验证过了
     
@@ -256,9 +270,9 @@ float data1 =(-INS.Pitch)*0.01745329;
 float data2 =INS.Yaw*0.01745329;
 
 float data3 = down_receve1.shoot_speed;
-int8_t data4 = 0;
+int8_t data4 = 6;
 int8_t data5 = 0;
-int8_t data6 = 0;
+int8_t data6 = 100;
 
 
 
@@ -311,11 +325,22 @@ uint16_t Encode_Switch(uint16_t sh_value, uint16_t se_value)
     return (se_code << 2) | sh_code;
 }
 
+int16_t shoot_permission;
 
 void count1()
 {
   recieve_hz = recieve_flag;
-  recieve_flag =0;
 
+  if(can_shoot_flag>(recieve_flag/15))
+  {
+    shoot_permission=1;
+  }
+  else
+  {
+    shoot_permission =0;
+  }
+  up_send();
+  recieve_flag =0;
+  can_shoot_flag =0;
 
 }
